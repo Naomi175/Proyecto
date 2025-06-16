@@ -1,0 +1,20 @@
+# Ignorar ejecutables
+*.exe
+*.out
+*.o
+
+# Ignorar archivos temporales y de compilación
+*.obj
+*.dll
+*.so
+*.dylib
+
+# Ignorar archivos de editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Ignorar carpetas de compilación (si usas alguna)
+build/
+bin/
