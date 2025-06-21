@@ -3,6 +3,7 @@
 #include <string.h>
 #include "tdas/map.h"
 #include "tdas/linkedlist.h"
+#include "tdas/arraylist.h"
 #define MAX_NOMBRE 50
 #define MAX_CATEGORIA 30
 #define MAX_TELEFONO 15
@@ -24,11 +25,12 @@ typedef struct {
     List* productos;
 } Pedido;
 
-
 int main() {
     Map *mapaPorId = map_create_int();
     Map *mapaPorNombres = map_create_string();
     Map *mapaPorCategorias = map_create_string();
+    ArrayList *listaProductos = createArrayList();
+    List *listaCarro = createList();
 
     printf("Programa Funcionando :)");
     return 0;
