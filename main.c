@@ -9,6 +9,7 @@
 #define MAX_CATEGORIA 30
 #define MAX_TELEFONO 15
 #define MAX_DIRECCION 100
+#define MAX_NOVEDADES 10
 
 typedef struct {
     int id;
@@ -26,8 +27,6 @@ typedef struct {
     List* productos;
 } Pedido;
 
-Queue * colaNovedades;
-Queue * colaPedidos;
 
 // Función para limpiar la pantalla
 void limpiarPantalla() { system("clear"); }
@@ -140,6 +139,8 @@ int main() {
     Map *mapaPorCategorias = map_create_string();
     ArrayList *listaProductos = createArrayList();
     List *listaCarro = createList();
+    Queue *colaNovedades = createQueue(MAX_NOVEDADES);
+    Queue *colaPedidos = createQueue(0);
 
     printf("Programa Funcionando :)");
     return 0;
