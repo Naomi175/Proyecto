@@ -4,6 +4,7 @@
 #include "tdas/map.h"
 #include "tdas/linkedlist.h"
 #include "tdas/arraylist.h"
+#include "tdas/queue.h"
 #define MAX_NOMBRE 50
 #define MAX_CATEGORIA 30
 #define MAX_TELEFONO 15
@@ -24,6 +25,9 @@ typedef struct {
     char direccion[MAX_DIRECCION];
     List* productos;
 } Pedido;
+
+Queue * colaNovedades;
+Queue * colaPedidos;
 
 // Función para limpiar la pantalla
 void limpiarPantalla() { system("clear"); }
