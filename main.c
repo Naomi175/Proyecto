@@ -74,7 +74,7 @@ void mostrarProducto(Producto *producto) {
 void agregarAlCarro(List *carro, Producto *producto) {
     if (!carro || !producto) return;
 
-    // Crear una copia del producto
+    // Crear copia del producto
     Producto *nuevoProducto = malloc(sizeof(Producto));
     if (!nuevoProducto) return;
 
@@ -85,78 +85,145 @@ void agregarAlCarro(List *carro, Producto *producto) {
     printf("Producto '%s' agregado al carro.\n", nuevoProducto->nombre);
 }
 
-void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos) {
-    char ruta[256];
-    printf("Introduce la ruta del archivo CSV: ");
-    fgets(ruta, sizeof(ruta), stdin);
-    ruta[strcspn(ruta, "\n")] = '\0';  // Eliminar salto de línea
-
-    FILE *archivo = fopen(ruta, "r");
-    if (archivo == NULL) {
-        perror("Error al abrir el archivo");
+void insertarProductoEnTdas(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias,
+                            ArrayList *listaProductos, Queue *colaNovedades, Producto *nuevo) {
+    if (!nuevo) return;
+    if (map_search(mapaPorId, &nuevo->id)) {
+        printf("Ya existe un producto con el ID %d. Operación cancelada.\n", nuevo->id);
+        free(nuevo);
         return;
     }
+    // Lista global
+    pushBackArray(listaProductos, nuevo);
 
-    printf("Cargando productos...\n");
+    // Mapa por ID
+    int *idKey = malloc(sizeof(int));
+    *idKey = nuevo->id;
+    map_insert(mapaPorId, idKey, nuevo);
 
-    char linea[256];
-    fgets(linea, sizeof(linea), archivo); // Leer encabezados y descartarlos
+    // Mapa por nombre
+    char *nombreKey = strdup(nuevo->nombre);
+    map_insert(mapaPorNombres, nombreKey, nuevo);
 
-    int total = 0;
-    while (fgets(linea, sizeof(linea), archivo)) {
-        Producto *nuevo = malloc(sizeof(Producto));
-        if (!nuevo) continue;
-
-        // Separar campos por comas
-        char *campo = strtok(linea, ",");
-        if (!campo) continue;
-        nuevo->id = atoi(campo);
-
-        campo = strtok(NULL, ",");
-        if (!campo) continue;
-        strncpy(nuevo->nombre, campo, MAX_NOMBRE);
-
-        campo = strtok(NULL, ",");
-        if (!campo) continue;
-        strncpy(nuevo->categoria, campo, MAX_CATEGORIA);
-
-        campo = strtok(NULL, ",");
-        if (!campo) continue;
-        nuevo->precio = atoi(campo);
-
-        campo = strtok(NULL, ",");
-        if (!campo) continue;
-        nuevo->stock = atoi(campo);
-
-        // Insertar en lista de productos
-        pushBackArray(listaProductos, nuevo);
-
-        // Insertar en mapa por ID
-        int *idKey = malloc(sizeof(int));
-        *idKey = nuevo->id;
-        map_insert(mapaPorId, idKey, nuevo);
-
-        // Insertar en mapa por nombre
-        char *nombreKey = strdup(nuevo->nombre);
-        map_insert(mapaPorNombres, nombreKey, nuevo);
-
-        // Insertar en mapa por categoría (lista de productos)
-        MapPair *par = map_search(mapaPorCategorias, nuevo->categoria);
-        List *listaCategoria;
-        if (par == NULL) {
-            listaCategoria = createList();
-            char *categoriaKey = strdup(nuevo->categoria);
-            map_insert(mapaPorCategorias, categoriaKey, listaCategoria);
-        } else {
-            listaCategoria = (List *)par->value;
-        }
-        pushBack(listaCategoria, nuevo);
-
-        total++;
+    // Mapa por categoría
+    MapPair *par = map_search(mapaPorCategorias, nuevo->categoria);
+    List *listaCategoria;
+    if (!par) {
+        listaCategoria = createList();
+        char *categoriaKey = strdup(nuevo->categoria);
+        map_insert(mapaPorCategorias, categoriaKey, listaCategoria);
+    } else {
+        listaCategoria = (List *)par->value;
     }
+    pushBack(listaCategoria, nuevo);
 
-    fclose(archivo);
-    printf("Productos cargados exitosamente: %d\n", total);
+    // Cola de novedades
+    enqueue(colaNovedades, nuevo);
+}
+
+
+void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos, Queue *colaNovedades) {
+    while (1) {
+        char opcion;
+        puts("Seleccione un modo de ingreso:");
+        puts("1) Cargar archivo CSV");
+        puts("2) Ingresar producto manualmente");
+        puts("3) Regresar al menu de administrador");
+        scanf("%c", &opcion);
+        while (getchar() != '\n');
+        limpiarPantalla();
+        if (opcion == '1'){
+            char ruta[256];
+            printf("Introduce la ruta del archivo CSV: ");
+            fgets(ruta, sizeof(ruta), stdin);
+            ruta[strcspn(ruta, "\n")] = '\0';  // Eliminar salto de línea
+
+            FILE *archivo = fopen(ruta, "r");
+            if (archivo == NULL) {
+                perror("Error al abrir el archivo");
+                return;
+            }
+
+            printf("Cargando productos...\n");
+
+            char linea[256];
+            fgets(linea, sizeof(linea), archivo); // Leer encabezados y descartarlos
+
+            int total = 0;
+            while (fgets(linea, sizeof(linea), archivo)) {
+                Producto *nuevo = malloc(sizeof(Producto));
+                if (!nuevo) continue;
+
+                // Separar campos por comas
+                char *campo = strtok(linea, ",");
+                if (!campo) continue;
+                nuevo->id = atoi(campo);
+
+                campo = strtok(NULL, ",");
+                if (!campo) continue;
+                strncpy(nuevo->nombre, campo, MAX_NOMBRE);
+
+                campo = strtok(NULL, ",");
+                if (!campo) continue;
+                strncpy(nuevo->categoria, campo, MAX_CATEGORIA);
+
+                campo = strtok(NULL, ",");
+                if (!campo) continue;
+                nuevo->precio = atoi(campo);
+
+                campo = strtok(NULL, ",");
+                if (!campo) continue;
+                nuevo->stock = atoi(campo);
+
+                insertarProductoEnTdas(mapaPorId, mapaPorNombres, mapaPorCategorias,
+                                       listaProductos, colaNovedades, nuevo);
+
+                total++;
+            }
+            fclose(archivo);
+            printf("Productos cargados exitosamente: %d\n", total);
+            break;
+        } 
+        else if (opcion == '2') {
+            Producto *nuevo = malloc(sizeof(Producto));
+            if (!nuevo) {
+                perror("No se pudo asignar memoria para el producto");
+                continue;
+            }
+
+            printf("Ingrese un ID para el producto: ");
+            scanf("%d", &nuevo->id);
+            while (getchar() != '\n'); // Limpiar buffer
+
+            printf("Ingrese el nombre del producto: ");
+            fgets(nuevo->nombre, MAX_NOMBRE, stdin);
+            nuevo->nombre[strcspn(nuevo->nombre, "\n")] = '\0'; // Quitar salto de línea
+
+            printf("Ingrese la categoria del producto: ");
+            fgets(nuevo->categoria, MAX_CATEGORIA, stdin);
+            nuevo->categoria[strcspn(nuevo->categoria, "\n")] = '\0';
+
+            printf("Ingrese el precio del producto: ");
+            scanf("%d", &nuevo->precio);
+            while (getchar() != '\n');
+
+            printf("Ingrese el stock del producto: ");
+            scanf("%d", &nuevo->stock);
+            while (getchar() != '\n');
+
+            insertarProductoEnTdas(mapaPorId, mapaPorNombres, mapaPorCategorias,
+                                   listaProductos, colaNovedades, nuevo);
+
+            printf("Producto agregado correctamente.\n");
+        }
+        else if (opcion == '3') {
+            puts("Regresando al menu de administrador.");
+            break;
+        } else {
+            puts("Error: Caracter invalido.");
+        }
+    }
+    presioneTeclaParaContinuar();
 }
 
 void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades) {
@@ -165,7 +232,7 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
         char op[10];
         scanf("%s", op);
 
-        if (strcmp(op,"1") == 0) agregarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos); //1. Agregar producto.
+        if (strcmp(op,"1") == 0) agregarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //1. Agregar producto.
         else if (strcmp(op, "2") == 0) modificarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos);//2. Modificar producto.
         else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, listaCarro); //3. Eliminar producto.
         else if (strcmp(op, "4") == 0) consultarStock(listaProductos);//4. Consultar stock bajo.
@@ -181,7 +248,7 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
 }
 /* 
 */
-void ejecutarApliacion() {
+void ejecutarAplicacion() {
     Map *mapaPorId = map_create_int();
     Map *mapaPorNombres = map_create_string();
     Map *mapaPorCategorias = map_create_string();
@@ -210,7 +277,7 @@ void ejecutarApliacion() {
 }
 
 int main() {
-    ejecutarApliacion();
+    ejecutarAplicacion();
 
     printf("Programa Funcionando :)");
     return 0;
