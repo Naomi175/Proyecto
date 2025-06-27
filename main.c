@@ -30,26 +30,26 @@ typedef struct {
 
 void mostrarMenuPrincipal() {
     printf("---------------------------------------------\n");
-    printf("\nMENU PRINCIPAL - SELECCIONE UNA OPCIÓN:\n");
+    printf("MENU PRINCIPAL - SELECCIONE UNA OPCION:\n");
     printf("---------------------------------------------\n");
     printf("1. Revisar novedades.\n");
-    printf("2. Ver catálogo completo.\n");
+    printf("2. Ver catalogo completo.\n");
     printf("3. Buscar producto por nombre.\n");
-    printf("4. Ver productos por categoría.\n");
-    printf("5. Ver carrito de compras y encargar.");
+    printf("4. Ver productos por categoria.\n");
+    printf("5. Ver carrito de compras y encargar.\n");
     printf("6. Ingresar al modo administrador.\n");
     printf("7. Salir del programa.\n");
 }
 
 void mostrarMenuAdmin() {
     printf("---------------------------------------------\n");
-    printf("\nMODO ADMINISTRADOR - SELECCIONE UNA OPCIÓN:\n");
+    printf("MODO ADMINISTRADOR - SELECCIONE UNA OPCION:\n");
     printf("---------------------------------------------\n");
     printf("1. Agregar producto.\n");
     printf("2. Modificar producto.\n");
     printf("3. Eliminar producto.\n");
     printf("4. Consultar stock bajo.\n");
-    printf("5. Gestionar pedidos de clientes.");
+    printf("5. Gestionar pedidos de clientes.\n");
     printf("6. Cambiar clave de administrador.\n");
     printf("7. Salir del modo administrador.\n");
 }
@@ -57,13 +57,20 @@ void mostrarMenuAdmin() {
 // Función para limpiar la pantalla
 void limpiarPantalla() { system("clear"); }
 
+void limpiarBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 void presioneTeclaParaContinuar() {
-  puts("Presione una tecla para continuar...");
-  getchar(); // Consume el '\n' del buffer de entrada
+    printf("Presione ENTER para continuar...");
+    limpiarBuffer();
+    getchar();
 }
 
 void mostrarProducto(Producto *producto) {
     if (!producto) return;
+    puts("----------------------------------------");
     printf("ID: %d\n", producto->id);
     printf("Nombre: %s\n", producto->nombre);
     printf("Categoría: %s\n", producto->categoria);
@@ -123,16 +130,17 @@ void insertarProductoEnTdas(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCat
 
 
 void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos, Queue *colaNovedades) {
+    limpiarPantalla();
     while (1) {
         char opcion;
         puts("Seleccione un modo de ingreso:");
         puts("1) Cargar archivo CSV");
         puts("2) Ingresar producto manualmente");
         puts("3) Regresar al menu de administrador");
-        scanf("%c", &opcion);
+        scanf(" %c", &opcion);
         while (getchar() != '\n');
-        limpiarPantalla();
         if (opcion == '1'){
+            limpiarPantalla();
             char ruta[256];
             printf("Introduce la ruta del archivo CSV: ");
             fgets(ruta, sizeof(ruta), stdin);
@@ -141,6 +149,7 @@ void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias
             FILE *archivo = fopen(ruta, "r");
             if (archivo == NULL) {
                 perror("Error al abrir el archivo");
+                presioneTeclaParaContinuar();
                 return;
             }
 
@@ -185,9 +194,11 @@ void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias
             break;
         } 
         else if (opcion == '2') {
+            limpiarPantalla();
             Producto *nuevo = malloc(sizeof(Producto));
             if (!nuevo) {
                 perror("No se pudo asignar memoria para el producto");
+                presioneTeclaParaContinuar();
                 continue;
             }
 
@@ -217,6 +228,7 @@ void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias
             printf("Producto agregado correctamente.\n");
         }
         else if (opcion == '3') {
+            limpiarPantalla();
             puts("Regresando al menu de administrador.");
             break;
         } else {
@@ -226,28 +238,57 @@ void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias
     presioneTeclaParaContinuar();
 }
 
+void revisarNovedades(Queue *colaNovedades){
+    limpiarPantalla();
+    if (isEmpty(colaNovedades)){
+        puts("No hay novedades en el catalogo.");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    puts("Novedades recientes del catalogo:");
+
+    Queue *colaAux = createQueue(colaNovedades->maxSize);
+
+    while (!isEmpty(colaNovedades)) {
+        void *producto = dequeue(colaNovedades);
+        mostrarProducto(producto);         // Mostrar usando función externa
+        enqueue(colaAux, producto);        // Guardar en la auxiliar
+    }
+
+    // Restaurar los datos a la cola original
+    while (!isEmpty(colaAux)) {
+        void *producto = dequeue(colaAux);
+        enqueue(colaNovedades, producto);
+    }
+
+    free(colaAux);
+
+    presioneTeclaParaContinuar();
+    return;
+}
+
 void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades) {
     while (1) {
+        limpiarPantalla();
         mostrarMenuAdmin();
         char op[10];
         scanf("%s", op);
 
         if (strcmp(op,"1") == 0) agregarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //1. Agregar producto.
-        else if (strcmp(op, "2") == 0) modificarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos);//2. Modificar producto.
-        else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, listaCarro); //3. Eliminar producto.
-        else if (strcmp(op, "4") == 0) consultarStock(listaProductos);//4. Consultar stock bajo.
-        else if (strcmp(op, "5") == 0) gestionPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
-        else if (strcmp(op, "6") == 0) cambiarClave();//6. Cambiar clave de administrador.
+        //else if (strcmp(op, "2") == 0) modificarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, listaCarro, colaNovedades);//2. Modificar producto.
+        //else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, listaCarro, colaNovedades); //3. Eliminar producto.
+        //else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
+        //else if (strcmp(op, "5") == 0) gestionPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
+        //else if (strcmp(op, "6") == 0) cambiarClave();//6. Cambiar clave de administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del modo administrador.
             printf("Volviendo al menú principal...\n");
             break;
         }
         else printf("Respuesta inválida, inténtelo de nuevo.\n");
-        
     }
 }
-/* 
-*/
+
 void ejecutarAplicacion() {
     Map *mapaPorId = map_create_int();
     Map *mapaPorNombres = map_create_string();
@@ -258,15 +299,16 @@ void ejecutarAplicacion() {
     Queue *colaPedidos = createQueue(0);
 
     while (1) {
+        limpiarPantalla();
         mostrarMenuPrincipal();
         char op[10];
         scanf("%s", op);
 
         if (strcmp(op,"1") == 0) revisarNovedades(colaNovedades); //1. Revisar novedades.
-        else if (strcmp(op, "2") == 0) verCatalogo(listaProductos); //2. Ver catálogo completo.
-        else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
-        else if (strcmp(op, "4") == 0) buscarPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
-        else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
+        //else if (strcmp(op, "2") == 0) verCatalogo(listaProductos); //2. Ver catálogo completo.
+        //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
+        //else if (strcmp(op, "4") == 0) buscarPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
+        //else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
         else if (strcmp(op, "6") == 0) modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades);//6. Ingresar al modo administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del programa.
             printf("Saliendo del programa...\n");
