@@ -68,28 +68,37 @@ void presioneTeclaParaContinuar() {
     getchar();
 }
 
+int compararPorNombre(const void *a, const void *b) {
+    const Producto *prodA = (const Producto *)a;
+    const Producto *prodB = (const Producto *)b;
+    return strcmp(prodA->nombre, prodB->nombre);
+}
+
+void eliminarDeArrayList(ArrayList *lista, void *dato) {
+    void *actual = firstListArray(lista);
+    while (actual != NULL) {
+        if (actual == dato) {
+            popCurrentArray(lista);
+            return;
+        }
+        actual = nextListArray(lista);
+    }
+}
+
 void mostrarProducto(Producto *producto) {
     if (!producto) return;
     puts("----------------------------------------");
     printf("ID: %d\n", producto->id);
     printf("Nombre: %s\n", producto->nombre);
-    printf("Categoría: %s\n", producto->categoria);
+    printf("Categoria: %s\n", producto->categoria);
     printf("Precio: $%d\n", producto->precio);
     printf("Stock: %d\n", producto->stock);
 }
 
 void agregarAlCarro(List *carro, Producto *producto) {
     if (!carro || !producto) return;
-
-    // Crear copia del producto
-    Producto *nuevoProducto = malloc(sizeof(Producto));
-    if (!nuevoProducto) return;
-
-    memcpy(nuevoProducto, producto, sizeof(Producto));
-
-    // Agregar al final del carro
-    pushBack(carro, nuevoProducto);
-    printf("Producto '%s' agregado al carro.\n", nuevoProducto->nombre);
+    pushBack(carro, producto);  // Agrega un puntero al producto original
+    printf("Producto '%s' agregado al carro.\n", producto->nombre);
 }
 
 void insertarProductoEnTdas(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias,
@@ -101,7 +110,7 @@ void insertarProductoEnTdas(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCat
         return;
     }
     // Lista global
-    pushBackArray(listaProductos, nuevo);
+    insertSortedArray(listaProductos, nuevo, compararPorNombre);
 
     // Mapa por ID
     int *idKey = malloc(sizeof(int));
@@ -226,6 +235,7 @@ void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias
                                    listaProductos, colaNovedades, nuevo);
 
             printf("Producto agregado correctamente.\n");
+            break;
         }
         else if (opcion == '3') {
             limpiarPantalla();
@@ -255,6 +265,7 @@ void revisarNovedades(Queue *colaNovedades){
         mostrarProducto(producto);         // Mostrar usando función externa
         enqueue(colaAux, producto);        // Guardar en la auxiliar
     }
+    puts("----------------------------------------");
 
     // Restaurar los datos a la cola original
     while (!isEmpty(colaAux)) {
@@ -268,6 +279,215 @@ void revisarNovedades(Queue *colaNovedades){
     return;
 }
 
+void modificarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos) {
+    limpiarPantalla();
+
+    printf("Ingrese el ID del producto a modificar: ");
+    int id;
+    scanf("%d", &id);
+    while (getchar() != '\n');
+
+    MapPair *par = map_search(mapaPorId, &id);
+    if (!par) {
+        printf("No se encontro ningun producto con el ID: %d\n", id);
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    Producto *producto = (Producto *)par->value;
+
+    while (1) {
+        limpiarPantalla();
+        printf("Producto actual:\n");
+        mostrarProducto(producto);
+        puts("\nQue desea modificar?");
+        puts("1. Nombre");
+        puts("2. Categoria");
+        puts("3. Precio");
+        puts("4. Stock");
+        puts("5. Volver al menu");
+
+        char opcion;
+        scanf(" %c", &opcion);
+        while (getchar() != '\n');
+
+        if (opcion == '1') {
+            // Eliminar del mapa por nombre
+            map_remove(mapaPorNombres, producto->nombre);
+
+            // Eliminar de lista global
+            eliminarDeArrayList(listaProductos, producto);
+
+            printf("Nuevo nombre: ");
+            fgets(producto->nombre, MAX_NOMBRE, stdin);
+            producto->nombre[strcspn(producto->nombre, "\n")] = '\0';
+
+            // Insertar con nuevo nombre
+            char *nuevaClave = strdup(producto->nombre);
+            map_insert(mapaPorNombres, nuevaClave, producto);
+
+            // Insertar ordenadamente en lista global
+            insertSortedArray(listaProductos, producto, compararPorNombre);
+
+            printf("Nombre actualizado correctamente.\n");
+        }
+        else if (opcion == '2') {
+            // Eliminar de la categoría anterior
+            MapPair *parCat = map_search(mapaPorCategorias, producto->categoria);
+            if (parCat) {
+                List *listaCat = parCat->value;
+                void *dato = firstList(listaCat);
+                while (dato) {
+                    if (dato == producto) {
+                        popCurrent(listaCat);
+                        break;
+                    }
+                    dato = nextList(listaCat);
+                }
+            }
+
+            printf("Nueva categoria: ");
+            fgets(producto->categoria, MAX_CATEGORIA, stdin);
+            producto->categoria[strcspn(producto->categoria, "\n")] = '\0';
+
+            // Insertar en nueva categoría
+            MapPair *nuevaCat = map_search(mapaPorCategorias, producto->categoria);
+            List *listaNuevaCat;
+            if (!nuevaCat) {
+                listaNuevaCat = createList();
+                char *clave = strdup(producto->categoria);
+                map_insert(mapaPorCategorias, clave, listaNuevaCat);
+            } else {
+                listaNuevaCat = nuevaCat->value;
+            }
+            pushBack(listaNuevaCat, producto);
+
+            printf("Categoria actualizada correctamente.\n");
+        }
+        else if (opcion == '3') {
+            printf("Nuevo precio: ");
+            scanf("%d", &producto->precio);
+            while (getchar() != '\n');
+            printf("Precio actualizado correctamente.\n");
+        }
+        else if (opcion == '4') {
+            printf("Nuevo stock: ");
+            scanf("%d", &producto->stock);
+            while (getchar() != '\n');
+            printf("Stock actualizado correctamente.\n");
+        }
+        else if (opcion == '5') {
+            break;
+        } else {
+            printf("Opcion invalida.\n");
+        }
+
+        presioneTeclaParaContinuar();
+    }
+}
+
+void eliminarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos, Queue *colaNovedades) {
+    limpiarPantalla();
+    printf("Ingrese el ID del producto a eliminar: ");
+    int id;
+    scanf("%d", &id);
+    while (getchar() != '\n');
+
+    MapPair *par = map_search(mapaPorId, &id);
+    if (!par) {
+        printf("No se encontro ningun producto con el ID %d.\n", id);
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    Producto *producto = (Producto *)par->value;
+    mostrarProducto(producto);
+    puts("----------------------------------------");
+    puts("Desea eliminar este producto?");
+    puts("1) Eliminar producto");
+    puts("2) Cancelar accion");
+    while(1) {
+        puts("Ingrese una opcion:");
+        char opcion;
+        scanf(" %c", &opcion);
+        while (getchar() != '\n');
+        if (opcion == '1'){
+            // Eliminar de mapaPorId
+            map_remove(mapaPorId, &producto->id);
+
+            // Eliminar de mapaPorNombres
+            map_remove(mapaPorNombres, producto->nombre);
+
+            // Eliminar de mapaPorCategorias
+            MapPair *catPar = map_search(mapaPorCategorias, producto->categoria);
+            if (catPar) {
+                List *listaCat = (List *)catPar->value;
+                void *p = firstList(listaCat);
+                while (p) {
+                    if (p == producto) {
+                        popCurrent(listaCat);
+                        break;
+                    }
+                    p = nextList(listaCat);
+                }
+            }
+
+            // Eliminar de listaProductos
+            eliminarDeArrayList(listaProductos, producto);
+
+            // Eliminar de la cola de novedades (con cola auxiliar)
+            Queue *colaAux = createQueue(MAX_NOVEDADES);
+            while (!isEmpty(colaNovedades)) {
+                Producto *productoQ = dequeue(colaNovedades);
+                if (productoQ != producto) {
+                    enqueue(colaAux, productoQ);
+                }
+            }
+            // Restaurar productos a la cola original
+            while (!isEmpty(colaAux)) {
+                enqueue(colaNovedades, dequeue(colaAux));
+            }
+            free(colaAux);
+
+            // Liberar memoria del producto
+            free(producto);
+
+            limpiarPantalla();
+            printf("\nProducto eliminado correctamente.\n");
+            break;
+        }
+        else if (opcion == '2'){
+            limpiarPantalla();
+            puts("Accion cancelada.");
+            break;
+        } else {
+            puts("Error: Caracter invalido.");
+        }
+    }
+    presioneTeclaParaContinuar();
+}
+
+void verCatalogo(ArrayList *listaProductos) {
+    limpiarPantalla();
+
+    void *dato = firstListArray(listaProductos);
+    if (!dato) {
+        puts("No hay productos en el catalogo.");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    puts("Catalogo completo de productos (ordenado por nombre):");
+
+    while (dato != NULL) {
+        mostrarProducto((Producto *)dato);
+        dato = nextListArray(listaProductos);
+    }
+    puts("----------------------------------------");
+
+    presioneTeclaParaContinuar();
+}
+
 void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades) {
     while (1) {
         limpiarPantalla();
@@ -276,16 +496,16 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
         scanf("%s", op);
 
         if (strcmp(op,"1") == 0) agregarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //1. Agregar producto.
-        //else if (strcmp(op, "2") == 0) modificarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, listaCarro, colaNovedades);//2. Modificar producto.
-        //else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, listaCarro, colaNovedades); //3. Eliminar producto.
+        else if (strcmp(op, "2") == 0) modificarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos);//2. Modificar producto.
+        else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //3. Eliminar producto.
         //else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
         //else if (strcmp(op, "5") == 0) gestionPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
         //else if (strcmp(op, "6") == 0) cambiarClave();//6. Cambiar clave de administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del modo administrador.
-            printf("Volviendo al menú principal...\n");
+            printf("Volviendo al menu principal...\n");
             break;
         }
-        else printf("Respuesta inválida, inténtelo de nuevo.\n");
+        else printf("Respuesta invalida, intentelo de nuevo.\n");
     }
 }
 
@@ -305,7 +525,7 @@ void ejecutarAplicacion() {
         scanf("%s", op);
 
         if (strcmp(op,"1") == 0) revisarNovedades(colaNovedades); //1. Revisar novedades.
-        //else if (strcmp(op, "2") == 0) verCatalogo(listaProductos); //2. Ver catálogo completo.
+        else if (strcmp(op, "2") == 0) verCatalogo(listaProductos); //2. Ver catálogo completo.
         //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
         //else if (strcmp(op, "4") == 0) buscarPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
         //else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
@@ -314,13 +534,12 @@ void ejecutarAplicacion() {
             printf("Saliendo del programa...\n");
             break;
         }
-        else printf("Respuesta inválida, inténtelo de nuevo.\n");
+        else printf("Respuesta invalida, intentelo de nuevo.\n");
     }
 }
 
 int main() {
     ejecutarAplicacion();
-
     printf("Programa Funcionando :)");
     return 0;
 }

@@ -135,3 +135,23 @@ void destroyArrayList(ArrayList *list, void (*freeData)(void *)) {
     free(list->items);
     free(list);
 }
+
+void insertSortedArray(ArrayList *list, void *data, int (*cmp)(const void *, const void *)) {
+    ensureCapacity(list);
+    
+    int i = 0;
+    // Buscar la posición donde insertar usando la función de comparación
+    while (i < list->size && cmp(list->items[i], data) < 0) {
+        i++;
+    }
+
+    // Desplazar los elementos hacia la derecha
+    for (int j = list->size; j > i; j--) {
+        list->items[j] = list->items[j - 1];
+    }
+
+    // Insertar el nuevo elemento
+    list->items[i] = data;
+    list->size++;
+    list->current = i;
+}

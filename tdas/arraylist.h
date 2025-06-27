@@ -44,4 +44,7 @@ void cleanArrayList(ArrayList *list, void (*freeData)(void *));
 // Libera completamente la lista y todos sus elementos (usando free si se usa dinamicamente o NULL)
 void destroyArrayList(ArrayList *list, void (*freeData)(void *));
 
+// Inserta ordenadamente en el ArrayList según una función comparadora
+void insertSortedArray(ArrayList *list, void *data, int (*cmp)(const void *, const void *));
+
 #endif /* ARRAY_LIST_H */
