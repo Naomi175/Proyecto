@@ -5,28 +5,12 @@
 #include "tdas/linkedlist.h"
 #include "tdas/arraylist.h"
 #include "tdas/queue.h"
+#include "tdas/extra.h" // Structs y funciones adicionales aqui.
 #define MAX_NOMBRE 50
 #define MAX_CATEGORIA 30
 #define MAX_TELEFONO 15
 #define MAX_DIRECCION 100
 #define MAX_NOVEDADES 10
-
-typedef struct {
-    int id;
-    char nombre[MAX_NOMBRE];
-    char categoria[MAX_CATEGORIA];
-    int precio;
-    int stock;
-} Producto;
-
-typedef struct {
-    int idPedido;
-    char nombreCliente[MAX_NOMBRE];
-    char telefono[MAX_TELEFONO];
-    char direccion[MAX_DIRECCION];
-    List* productos;
-} Pedido;
-
 
 void mostrarMenuPrincipal() {
     printf("---------------------------------------------\n");
@@ -52,53 +36,6 @@ void mostrarMenuAdmin() {
     printf("5. Gestionar pedidos de clientes.\n");
     printf("6. Cambiar clave de administrador.\n");
     printf("7. Salir del modo administrador.\n");
-}
-
-// Función para limpiar la pantalla
-void limpiarPantalla() { system("clear"); }
-
-void limpiarBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
-void presioneTeclaParaContinuar() {
-    printf("Presione ENTER para continuar...");
-    limpiarBuffer();
-    getchar();
-}
-
-int compararPorNombre(const void *a, const void *b) {
-    const Producto *prodA = (const Producto *)a;
-    const Producto *prodB = (const Producto *)b;
-    return strcmp(prodA->nombre, prodB->nombre);
-}
-
-void eliminarDeArrayList(ArrayList *lista, void *dato) {
-    void *actual = firstListArray(lista);
-    while (actual != NULL) {
-        if (actual == dato) {
-            popCurrentArray(lista);
-            return;
-        }
-        actual = nextListArray(lista);
-    }
-}
-
-void mostrarProducto(Producto *producto) {
-    if (!producto) return;
-    puts("----------------------------------------");
-    printf("ID: %d\n", producto->id);
-    printf("Nombre: %s\n", producto->nombre);
-    printf("Categoria: %s\n", producto->categoria);
-    printf("Precio: $%d\n", producto->precio);
-    printf("Stock: %d\n", producto->stock);
-}
-
-void agregarAlCarro(List *carro, Producto *producto) {
-    if (!carro || !producto) return;
-    pushBack(carro, producto);  // Agrega un puntero al producto original
-    printf("Producto '%s' agregado al carro.\n", producto->nombre);
 }
 
 void insertarProductoEnTdas(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias,
@@ -136,7 +73,6 @@ void insertarProductoEnTdas(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCat
     // Cola de novedades
     enqueue(colaNovedades, nuevo);
 }
-
 
 void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos, Queue *colaNovedades) {
     limpiarPantalla();
@@ -527,7 +463,7 @@ void ejecutarAplicacion() {
         if (strcmp(op,"1") == 0) revisarNovedades(colaNovedades); //1. Revisar novedades.
         else if (strcmp(op, "2") == 0) verCatalogo(listaProductos); //2. Ver catálogo completo.
         //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
-        //else if (strcmp(op, "4") == 0) buscarPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
+        //else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
         //else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
         else if (strcmp(op, "6") == 0) modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades);//6. Ingresar al modo administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del programa.
