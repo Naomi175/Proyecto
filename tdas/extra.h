@@ -48,4 +48,10 @@ void mostrarProducto(Producto *producto);
 // Agrega un producto al carro de compras
 void agregarAlCarro(List *carro, Producto *producto);
 
+// Muestra hasta max 10 productos y permite seleccionar para agregar al carro
+void seleccionarProductosParaCarro(Producto **productos, int cantidad, List *carro);
+
+// Extrae hasta max 10 productos de una List* en un arreglo Producto*[]
+int obtenerProductosDeLista(List *lista, Producto **productos, int max);
+
 #endif

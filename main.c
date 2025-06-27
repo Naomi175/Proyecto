@@ -184,9 +184,9 @@ void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias
     presioneTeclaParaContinuar();
 }
 
-void revisarNovedades(Queue *colaNovedades){
+void revisarNovedades(Queue *colaNovedades, List *carro) {
     limpiarPantalla();
-    if (isEmpty(colaNovedades)){
+    if (isEmpty(colaNovedades)) {
         puts("No hay novedades en el catalogo.");
         presioneTeclaParaContinuar();
         return;
@@ -194,25 +194,54 @@ void revisarNovedades(Queue *colaNovedades){
 
     puts("Novedades recientes del catalogo:");
 
+    Producto *productos[10]; // Arreglo de productos para añadir a carro
+    int cantidad = 0;
+
     Queue *colaAux = createQueue(colaNovedades->maxSize);
 
     while (!isEmpty(colaNovedades)) {
-        void *producto = dequeue(colaNovedades);
-        mostrarProducto(producto);         // Mostrar usando función externa
-        enqueue(colaAux, producto);        // Guardar en la auxiliar
+        Producto *producto = dequeue(colaNovedades);
+
+        if (cantidad < 10) {
+            productos[cantidad++] = producto;
+        }
+
+        mostrarProducto(producto);
+        enqueue(colaAux, producto);  // Guardar en cola auxiliar
     }
+
     puts("----------------------------------------");
 
-    // Restaurar los datos a la cola original
+    // Restaurar cola original
     while (!isEmpty(colaAux)) {
-        void *producto = dequeue(colaAux);
-        enqueue(colaNovedades, producto);
+        enqueue(colaNovedades, dequeue(colaAux));
     }
-
     free(colaAux);
 
+    // Permitir seleccionar producto para agregar al carrito
+    puts("Desea agregar algun producto al carro?");
+    puts("1) Seleccionar producto");
+    puts("2) Volver al menu");
+    printf("Ingrese su opcion: ");
+    while (1){
+        char opcion;
+        scanf(" %c", &opcion);
+        while (getchar() != '\n');
+
+        if (opcion == '1'){
+            limpiarPantalla();
+            seleccionarProductosParaCarro(productos, cantidad, carro);
+            break;
+        }
+        else if (opcion == '2'){
+            limpiarPantalla();
+            puts("Volviendo al menu.");
+            break;
+        } else {
+            puts("Error: Caracter invalido.");
+        }
+    }
     presioneTeclaParaContinuar();
-    return;
 }
 
 void modificarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos) {
@@ -460,7 +489,7 @@ void ejecutarAplicacion() {
         char op[10];
         scanf("%s", op);
 
-        if (strcmp(op,"1") == 0) revisarNovedades(colaNovedades); //1. Revisar novedades.
+        if (strcmp(op,"1") == 0) revisarNovedades(colaNovedades, listaCarro); //1. Revisar novedades.
         else if (strcmp(op, "2") == 0) verCatalogo(listaProductos); //2. Ver catálogo completo.
         //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
         //else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
