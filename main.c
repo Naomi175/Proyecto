@@ -433,6 +433,33 @@ void revisarNovedades(Queue *colaNovedades, List *carro) {
     presioneTeclaParaContinuar();
 }
 
+// void buscarPorNombre(Map *mapaPorNombres) {                           // Algo tiene malo esta funcion, se bugea al momento de escribir el nombre
+//     limpiarPantalla();
+//     char nombre[MAX_NOMBRE];
+//     printf("Ingrese el nombre del producto a buscar: ");
+//     fgets(nombre, sizeof(nombre), stdin);
+//     MapPair *par = map_search(mapaPorNombres, nombre);
+//     if (!par) {
+//         puts("No se encontraron productos con ese nombre.");
+//         presioneTeclaParaContinuar();
+//         return;
+//     }
+
+//     List *listaProductos = (List *)par->value;
+//     void *producto = firstList(listaProductos);
+//     if (!producto) {
+//         puts("No hay productos con ese nombre.");
+//         presioneTeclaParaContinuar();
+//         return;
+//     }
+
+//     while (producto) {
+//         mostrarProducto((Producto *)producto);
+//         producto = nextList(listaProductos);
+//     }
+//     presioneTeclaParaContinuar();
+// }
+
 void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     limpiarPantalla();
 
@@ -519,7 +546,7 @@ void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
 
 
 
-void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades, short clave) {
+void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades) {
     while (1) {
         limpiarPantalla();
         mostrarMenuAdmin();
@@ -560,7 +587,7 @@ void ejecutarAplicacion() {
 
         if (strcmp(op,"1") == 0) revisarNovedades(colaNovedades, listaCarro); //1. Revisar novedades.
         else if (strcmp(op, "2") == 0) verCatalogo(listaProductos, listaCarro); //2. Ver catálogo completo.
-        //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
+        else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
         //else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
         //else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
         else if (strcmp(op, "6") == 0){ //6. Ingresar al modo administrador.
@@ -591,7 +618,7 @@ void ejecutarAplicacion() {
                     puts("Clave incorrecta, intente nuevamente.");
                 }
             }
-            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades, clave);//6. Ingresar al modo administrador.
+            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades);//6. Ingresar al modo administrador.
         }
         else if (strcmp(op, "7") == 0) {  //7. Salir del programa.
             limpiarPantalla();
