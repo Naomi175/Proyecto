@@ -475,7 +475,6 @@ void buscarPorNombre(Map *mapaPorNombres, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
-
 void consultarStock(Map *mapaPorId) {
     limpiarPantalla();
     puts("Productos con stock bajo (menos de 5 unidades):");
@@ -684,6 +683,38 @@ void verPorCategoria(Map *mapaPorCategorias, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
+void cambiarClave(char *claveAdmin) {
+    limpiarPantalla();
+    
+    char nuevaClave[10];
+    char confirmarClave[10];
+
+    printf("Ingrese una nueva clave de 4 digitos: ");
+    scanf("%s", nuevaClave);
+    limpiarBuffer();
+
+    if (strlen(nuevaClave) != 4) {
+        puts("Error: La clave debe tener exactamente 4 digitos.");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    printf("Confirme la nueva clave: ");
+    scanf("%s", confirmarClave);
+    limpiarBuffer();
+
+    if (strcmp(nuevaClave, confirmarClave) != 0) {
+        puts("Error: Las claves no coinciden.");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    // Cambiar la clave
+    strcpy(claveAdmin, nuevaClave);
+    puts("Clave cambiada exitosamente.");
+    presioneTeclaParaContinuar();
+}
+
 void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades, char *claveAdmin) {
     while (1) {
         limpiarPantalla();
@@ -697,7 +728,7 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
         else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //3. Eliminar producto.
         else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
         //else if (strcmp(op, "5") == 0) gestionPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
-        //else if (strcmp(op, "6") == 0) cambiarClave(claveAdmin);//6. Cambiar clave de administrador.
+        else if (strcmp(op, "6") == 0) cambiarClave(claveAdmin);//6. Cambiar clave de administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del modo administrador.
             printf("Volviendo al menu principal...\n");
             break;
@@ -755,7 +786,10 @@ void ejecutarAplicacion() {
                     puts("Clave incorrecta, intente nuevamente.");
                 }
             }
-            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades, claveAdmin);//6. Ingresar al modo administrador.
+
+            if (claveCorrecta){
+                modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades, claveAdmin);
+            }
         }
         else if (strcmp(op, "7") == 0) {  //7. Salir del programa.
             limpiarPantalla();
