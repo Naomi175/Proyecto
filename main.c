@@ -12,6 +12,7 @@
 #define MAX_DIRECCION 100
 #define MAX_NOVEDADES 10
 
+// Muestra el menú principal de opciones disponibles para el usuario
 void mostrarMenuPrincipal() {
     printf("---------------------------------------------\n");
     printf("MENU PRINCIPAL - SELECCIONE UNA OPCION:\n");
@@ -25,6 +26,7 @@ void mostrarMenuPrincipal() {
     printf("7. Salir del programa.\n");
 }
 
+// Muestra el menú del modo administrador con sus funcionalidades
 void mostrarMenuAdmin() {
     printf("---------------------------------------------\n");
     printf("MODO ADMINISTRADOR - SELECCIONE UNA OPCION:\n");
@@ -38,6 +40,8 @@ void mostrarMenuAdmin() {
     printf("7. Salir del modo administrador.\n");
 }
 
+// Inserta un nuevo producto en todos los TDAs correspondientes:
+// mapa por ID, por nombre, por categoría, lista global y cola de novedades.
 void insertarProductoEnTdas(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias,
                             ArrayList *listaProductos, Queue *colaNovedades, Producto *nuevo) {
     if (!nuevo) return;
@@ -74,6 +78,8 @@ void insertarProductoEnTdas(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCat
     enqueue(colaNovedades, nuevo);
 }
 
+// Permite al administrador agregar productos, ya sea desde un CSV o manualmente.
+// Llama a `insertarProductoEnTdas` después de obtener los datos.
 void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos, Queue *colaNovedades) {
     limpiarPantalla();
     while (1) {
@@ -184,6 +190,8 @@ void agregarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias
     presioneTeclaParaContinuar();
 }
 
+// Permite modificar atributos de un producto existente: nombre, categoría, precio o stock.
+// También actualiza los TDAs para reflejar los cambios.
 void modificarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos) {
     limpiarPantalla();
 
@@ -292,6 +300,8 @@ void modificarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategori
     }
 }
 
+// Elimina un producto completamente del sistema:
+// de mapas, lista global, cola de novedades y libera su memoria.
 void eliminarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategorias, ArrayList *listaProductos, Queue *colaNovedades) {
     limpiarPantalla();
     printf("Ingrese el ID del producto a eliminar: ");
@@ -373,6 +383,8 @@ void eliminarProducto(Map *mapaPorId, Map *mapaPorNombres, Map *mapaPorCategoria
     presioneTeclaParaContinuar();
 }
 
+// Muestra los últimos productos agregados a la cola de novedades.
+// Permite al usuario agregar alguno al carrito.
 void revisarNovedades(Queue *colaNovedades, List *carro) {
     limpiarPantalla();
     if (isEmpty(colaNovedades)) {
@@ -434,6 +446,8 @@ void revisarNovedades(Queue *colaNovedades, List *carro) {
     presioneTeclaParaContinuar();
 }
 
+// Busca un producto por su nombre usando el mapa correspondiente.
+// Permite agregarlo al carrito si se encuentra.
 void buscarPorNombre(Map *mapaPorNombres, List *listaCarro) {
     limpiarPantalla();
 
@@ -475,6 +489,7 @@ void buscarPorNombre(Map *mapaPorNombres, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
+// Muestra productos con stock menor a 5 unidades.
 void consultarStock(Map *mapaPorId) {
     limpiarPantalla();
     puts("Productos con stock bajo (menos de 5 unidades):");
@@ -496,6 +511,8 @@ void consultarStock(Map *mapaPorId) {
     presioneTeclaParaContinuar();
 }
 
+// Muestra el catálogo completo por páginas de 10 productos,
+// y permite agregar productos al carrito.
 void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     limpiarPantalla();
 
@@ -580,6 +597,8 @@ void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
+// Muestra productos pertenecientes a una categoría específica, paginados.
+// También permite agregar productos al carrito.
 void verPorCategoria(Map *mapaPorCategorias, List *listaCarro) {
     limpiarPantalla();
 
@@ -683,6 +702,7 @@ void verPorCategoria(Map *mapaPorCategorias, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
+// Muestra todos los pedidos pendientes de ser procesados sin eliminarlos de la cola.
 void mostrarPedidosPendientes(Queue *colaPedidos) {
     limpiarPantalla();
 
@@ -725,6 +745,8 @@ void mostrarPedidosPendientes(Queue *colaPedidos) {
     presioneTeclaParaContinuar();
 }
 
+// Procesa los pedidos uno por uno permitiendo al administrador aceptarlos (libera memoria)
+// o reenviarlos a la cola si decide no procesarlos.
 void procesarPedidos(Queue *colaPedidos) {
     limpiarPantalla();
 
@@ -799,6 +821,7 @@ void procesarPedidos(Queue *colaPedidos) {
     presioneTeclaParaContinuar();
 }
 
+// Ofrece al administrador un submenú para mostrar o procesar pedidos.
 void gestionarPedidos(Queue *colaPedidos){
     limpiarPantalla();
     while(1){
@@ -831,6 +854,7 @@ void gestionarPedidos(Queue *colaPedidos){
     presioneTeclaParaContinuar();
 }
 
+// Cambia la clave del administrador, asegurando que tenga 4 dígitos y sea confirmada.
 void cambiarClave(char *claveAdmin) {
     limpiarPantalla();
     
@@ -863,6 +887,8 @@ void cambiarClave(char *claveAdmin) {
     presioneTeclaParaContinuar();
 }
 
+// Muestra el menú administrador y permite ejecutar operaciones como agregar, modificar,
+// eliminar productos, revisar stock bajo, gestionar pedidos o cambiar la clave.
 void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades, char *claveAdmin) {
     while (1) {
         limpiarPantalla();
@@ -885,6 +911,8 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
     }
 }
 
+// Crea los TDAs principales, muestra el menú y ejecuta la funcionalidad
+// seleccionada por el usuario. Incluye verificación de clave para modo admin.
 void ejecutarAplicacion() {
     Map *mapaPorId = map_create_int();
     Map *mapaPorNombres = map_create_string();
@@ -948,8 +976,9 @@ void ejecutarAplicacion() {
     }
 }
 
+// Función principal del programa.
 int main() {
     ejecutarAplicacion();
-    printf("Programa Funcionando :)");
+    printf("Programa Finalizado.");
     return 0;
 }
