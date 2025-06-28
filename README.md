@@ -63,6 +63,8 @@ Y seguido a este, deben ir línea por línea los datos de cada producto. Por eje
 
 >05;Tijeras escolares;Papelería;1500;15
 
+La aplicación como tal tiene ya un archivo csv de ejemplo, llamado "Ejemplo_productos.csv", este contiene 50 productos diferentes que sirven tanto para tener un ejemplo de cómo debe estar hecho el csv, como también para hacer prueba del programa y ver su funcionalidad.
+
 **Considera que los datos que deben estar en cada producto son:**
 
 - **ID :** dato de tipo entero, es como un código para identificar el producto por parte de la administración.
@@ -142,7 +144,13 @@ Ingrese el nombre del producto a buscar:
 Ingrese la categoria de productos que le interese:
 
 5 (Ver carrito de compras y encargar)
-
+---------------------------------------------
+CARRITO DE COMPRAS - SELECCIONE UNA OPCION:
+---------------------------------------------
+1. Mostrar carrito
+2. Editar carrito
+3. Encargar productos en el carrito
+4. Volver
 
 6 (Ingresar al modo administrador)
 Ingrese la clave de administrador (4 digitos) o ingrese 0 para regresar:
