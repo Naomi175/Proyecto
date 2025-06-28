@@ -101,7 +101,7 @@ Y seguido a este, deben ir línea por línea los datos de cada producto. Por eje
     1) Ver pedidos pendientes: Se mostrarán todos los pedidos actuales sin procesar y con la infromación de cada uno.
     2) Procesar pedido: Se pregunta si se desea procesar el pedido más antiguo, en caso de confirmar esto, este pedido se procesará automaticamente.
 
-6. **Cambiar clave de administrador:** Permite modificar la clave de ingreso al modo administrador, solicitando nuevamente la clave actual y también solicitando la clave por la que se desea cambiar. Este cambio ocurrirá solo si las claves son distintas, ya que si son iguales, la modificación sería innecesaria.
+6. **Cambiar clave de administrador:** Permite modificar la clave de ingreso al modo administrador, solicitando la clave por la que se desea cambiar y realizando otra solicitud como método de confirmación.
 
 
 ## ASPECTOS A CONSIDERAR:
@@ -114,7 +114,8 @@ La aplicación funciona solo si la terminal o la ventana emergente están abiert
 ## EJEMPLO VISUAL:
 
 **MENÚ PRINCIPAL:**
-```---------------------------------------------
+```
+---------------------------------------------
 MENU PRINCIPAL - SELECCIONE UNA OPCION:
 ---------------------------------------------
 1. Revisar novedades.
@@ -124,30 +125,32 @@ MENU PRINCIPAL - SELECCIONE UNA OPCION:
 5. Ver carrito de compras y encargar.
 6. Ingresar al modo administrador.
 7. Salir del programa.
-Ingrese su opcion:```
+Ingrese su opcion:
 
-**1 (Revisar novedades)** 
-```No hay novedades en el catalogo.
-Presione ENTER para continuar...```
+1 (Revisar novedades)
+No hay novedades en el catalogo.
+Presione ENTER para continuar...
 
-**2 (Ver catalogo completo)**
-```No hay productos en el catalogo.
-Presione ENTER para continuar...```
+2 (Ver catalogo completo)
+No hay productos en el catalogo.
+Presione ENTER para continuar...
 
-**3 (Buscar producto por nombre)**
-```Ingrese el nombre del producto a buscar:```
+3 (Buscar producto por nombre)
+Ingrese el nombre del producto a buscar:
 
-**4 (Ver productos por categoria)**
-```Ingrese la categoria de productos que le interese:```
+4 (Ver productos por categoria)
+Ingrese la categoria de productos que le interese:
 
-**5 (Ver carrito de compras y encargar)**
-``````
+5 (Ver carrito de compras y encargar)
 
-**6 (Ingresar al modo administrador)**
-```Ingrese la clave de administrador (4 digitos) o ingrese 0 para regresar:```
+
+6 (Ingresar al modo administrador)
+Ingrese la clave de administrador (4 digitos) o ingrese 0 para regresar:
+```
 
 **SUBMENU DEL MODO ADMINISTRADOR:**
-```---------------------------------------------
+```
+---------------------------------------------
 MODO ADMINISTRADOR - SELECCIONE UNA OPCION:
 ---------------------------------------------
 1. Agregar producto.
@@ -157,29 +160,34 @@ MODO ADMINISTRADOR - SELECCIONE UNA OPCION:
 5. Gestionar pedidos de clientes.
 6. Cambiar clave de administrador.
 7. Salir del modo administrador.
-Ingrese su opcion:```
+Ingrese su opcion:
 
-**1 (Agregar producto)** 
-```Seleccione un modo de ingreso:
+1 (Agregar producto) 
+Seleccione un modo de ingreso:
 1) Cargar archivo CSV
 2) Ingresar producto manualmente
-3) Regresar al menu de administrador```
+3) Regresar al menu de administrador
 
-**2 (Modificar producto)**
-```Ingrese el ID del producto a modificar:```
+2 (Modificar producto)
+Ingrese el ID del producto a modificar:
 
-**3 (Eliminar producto)**
-```Ingrese el ID del producto a eliminar:```
+3 (Eliminar producto)
+Ingrese el ID del producto a eliminar:
 
-**4 (Consultar stock bajo)**
-```Productos con stock bajo (menos de 5 unidades):       
-No hay productos con stock bajo.```
+4 (Consultar stock bajo)
+Productos con stock bajo (menos de 5 unidades):       
+No hay productos con stock bajo
 
-**5 (Gestionar pedidos de clientes)**
-``````
+5 (Gestionar pedidos de clientes)
+-----Opciones de gestion-----
+1) Mostrar pedidos pendientes
+2) iniciar proceso de pedidos
+3) Regresar al menu
+Ingrese una opcion: 
 
-**6 (Cambiar clave de administrador)**
-``````
+6 (Cambiar clave de administrador)
+Ingrese una nueva clave de 4 digitos:
+```
 
 **Proyecto realizado por:**
 - Felipe Abarca
