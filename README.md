@@ -95,7 +95,7 @@ Y seguido a este, deben ir línea por línea los datos de cada producto. Por eje
 
 3. **Eliminar producto:** Permite eliminar un producto existente, para esto se ingresa el ID de este producto para proceder con su eliminación.
 
-4. **Consultar stock bajo:** Para que el administrador sepa que se debe reponer. Se muestra un listado con los datos de productos que tengan un stock de 10 a menos.
+4. **Consultar stock bajo:** Para que el administrador sepa que se debe reponer. Se muestra un listado con los datos de productos que tengan un stock menor a 5.
 
 5. **Gestionar pedidos de clientes:** Permite al administrador ver y procesar los pedidos realizados por clientes. Para esto se muestran dos opciones:
     1) Ver pedidos pendientes: Se mostrarán todos los pedidos actuales sin procesar y con la infromación de cada uno.
@@ -108,11 +108,13 @@ Y seguido a este, deben ir línea por línea los datos de cada producto. Por eje
 
 Como ya se mencionó antes, al momento de ejecutar pueden haber casos donde el antivirus cierre la ventana emergente donde se ejecuta la aplicación. Pero se puede solucionar o desactivando el antivirus o trabajando directamente con lo que aparece en la terminal.
 
+La aplicación funciona solo si la terminal o la ventana emergente están abiertas, en caso de cerrarse, la información de los productos se borrará. Aunque es algo mejorable a futuro.
 
-## EJEMPLO DE USO:
+
+## EJEMPLO VISUAL:
 
 **MENÚ PRINCIPAL:**
----------------------------------------------
+```---------------------------------------------
 MENU PRINCIPAL - SELECCIONE UNA OPCION:
 ---------------------------------------------
 1. Revisar novedades.
@@ -122,23 +124,30 @@ MENU PRINCIPAL - SELECCIONE UNA OPCION:
 5. Ver carrito de compras y encargar.
 6. Ingresar al modo administrador.
 7. Salir del programa.
-Ingrese su opcion:
+Ingrese su opcion:```
 
 **1 (Revisar novedades)** 
+```No hay novedades en el catalogo.
+Presione ENTER para continuar...```
 
 **2 (Ver catalogo completo)**
+```No hay productos en el catalogo.
+Presione ENTER para continuar...```
 
 **3 (Buscar producto por nombre)**
+```Ingrese el nombre del producto a buscar:```
 
 **4 (Ver productos por categoria)**
+```Ingrese la categoria de productos que le interese:```
 
 **5 (Ver carrito de compras y encargar)**
+``````
 
 **6 (Ingresar al modo administrador)**
-Ingrese la clave de administrador (4 digitos) o ingrese 0 para regresar: 
+```Ingrese la clave de administrador (4 digitos) o ingrese 0 para regresar:```
 
 **SUBMENU DEL MODO ADMINISTRADOR:**
----------------------------------------------
+```---------------------------------------------
 MODO ADMINISTRADOR - SELECCIONE UNA OPCION:
 ---------------------------------------------
 1. Agregar producto.
@@ -148,20 +157,34 @@ MODO ADMINISTRADOR - SELECCIONE UNA OPCION:
 5. Gestionar pedidos de clientes.
 6. Cambiar clave de administrador.
 7. Salir del modo administrador.
-Ingrese su opcion:
+Ingrese su opcion:```
 
 **1 (Agregar producto)** 
-Seleccione un modo de ingreso:
+```Seleccione un modo de ingreso:
 1) Cargar archivo CSV
 2) Ingresar producto manualmente
-3) Regresar al menu de administrador
+3) Regresar al menu de administrador```
 
 **2 (Modificar producto)**
+```Ingrese el ID del producto a modificar:```
 
 **3 (Eliminar producto)**
+```Ingrese el ID del producto a eliminar:```
 
 **4 (Consultar stock bajo)**
+```Productos con stock bajo (menos de 5 unidades):       
+No hay productos con stock bajo.```
 
 **5 (Gestionar pedidos de clientes)**
+``````
 
 **6 (Cambiar clave de administrador)**
+``````
+
+**Proyecto realizado por:**
+- Felipe Abarca
+- Naomi Alveal
+- Melani Sanchez
+- Miguel Fuentes
+
+**Es importante destacar que las contribuciones de cada estudiante están visualizables en el mismo link del github.**
