@@ -53,24 +53,24 @@ void seleccionarProductosParaCarro(Producto **productos, int cantidad, List *car
     if (cantidad == 0) return;
 
     while (1) {
-        limpiarPantalla();
         puts("Seleccione un producto para agregar al carro:");
         for (int i = 0; i < cantidad; i++) {
             printf("%d) %s - $%d (Stock: %d)\n", i + 1, productos[i]->nombre, productos[i]->precio, productos[i]->stock);
         }
-        puts("0) Volver al menu");
+        puts("0) Cancelar y regresar");
 
         int opcion;
         printf("Ingrese una opcion: ");
         if (scanf("%d", &opcion) != 1 || opcion < 0 || opcion > cantidad) {
             limpiarBuffer();
-            puts("Opción invalida.");
+            limpiarPantalla();
+            puts("Opcion invalida.");
             continue;
         }
 
         if (opcion == 0){
             limpiarPantalla();
-            puts("Volviendo al menu.");
+            puts("Regresando.");
             break;
         }
 
@@ -80,7 +80,7 @@ void seleccionarProductosParaCarro(Producto **productos, int cantidad, List *car
             printf("Lo sentimos, el producto '%s' no tiene stock disponible :(\n", seleccionado->nombre);
             puts("Desea seguir agregando productos?");
             puts("1) Continuar");
-            puts("2) Salir al menu");
+            puts("2) Cancelar y regresar");
             printf("Ingrese su opcion: ");
             while (1){
                 char opcionstock;
@@ -91,31 +91,33 @@ void seleccionarProductosParaCarro(Producto **productos, int cantidad, List *car
                 }
                 else if (opcionstock == '2'){
                     limpiarPantalla();
-                    puts("Volviendo al menu.");
+                    puts("Regresando.");
                     return;
                 } else {
                     puts("Error: caracter invalido");
                     printf("Ingrese su opcion: ");
                 }
             }
+            limpiarPantalla();
             continue;
         }
         limpiarPantalla();
         agregarAlCarro(carro, seleccionado);
         puts("Desea seguir agregando productos?");
         puts("1) Continuar");
-        puts("2) Salir al menu");
+        puts("2) Cancelar y regresar");
         printf("Ingrese su opcion: ");
         while (1){
             char opcionFinal;
             scanf(" %c", &opcionFinal);
             while (getchar() != '\n');
             if (opcionFinal == '1'){
+                limpiarPantalla();
                 break;
             }
             else if (opcionFinal == '2'){
                 limpiarPantalla();
-                puts("Volviendo al menu.");
+                puts("Regresando.");
                 return;
             } else {
                 puts("Error: caracter invalido");
