@@ -560,7 +560,19 @@ void ejecutarAplicacion() {
         //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
         //else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
         //else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
-        else if (strcmp(op, "6") == 0) modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades);//6. Ingresar al modo administrador.
+        else if (strcmp(op, "6") == 0){
+            short clave = 0000;
+            short claveIngresada;
+            scanf("%hd", &claveIngresada);
+            while(claveIngresada != clave) {
+                printf("Ingrese la clave de administrador: ");
+                scanf("%hd", &claveIngresada);
+                if (claveIngresada != clave) {
+                    printf("Clave incorrecta, intente nuevamente.\n");
+                }
+            }
+            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades);//6. Ingresar al modo administrador.
+        }
         else if (strcmp(op, "7") == 0) {  //7. Salir del programa.
             limpiarPantalla();
             printf("Saliendo del programa...\n");
