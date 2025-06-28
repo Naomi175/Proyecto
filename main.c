@@ -475,6 +475,28 @@ void buscarPorNombre(Map *mapaPorNombres, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
+
+void consultarStock(Map *mapaPorId) {
+    limpiarPantalla();
+    puts("Productos con stock bajo (menos de 5 unidades):");
+    int encontrado = 0;
+
+    MapPair *par = map_first(mapaPorId);
+    while (par) {
+        Producto *producto = (Producto *)par->value;
+        if (producto->stock < 5) {
+            mostrarProducto(producto);
+            encontrado = 1;
+        }
+        par = map_next(mapaPorId);
+    }
+
+    if (!encontrado) {
+        puts("No hay productos con stock bajo.");
+    }
+    presioneTeclaParaContinuar();
+}
+
 void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     limpiarPantalla();
 
@@ -673,7 +695,7 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
         if (strcmp(op,"1") == 0) agregarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //1. Agregar producto.
         else if (strcmp(op, "2") == 0) modificarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos);//2. Modificar producto.
         else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //3. Eliminar producto.
-        //else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
+        else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
         //else if (strcmp(op, "5") == 0) gestionPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
         //else if (strcmp(op, "6") == 0) cambiarClave(claveAdmin);//6. Cambiar clave de administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del modo administrador.
