@@ -47,4 +47,10 @@ void destroyArrayList(ArrayList *list, void (*freeData)(void *));
 // Inserta ordenadamente en el ArrayList según una función comparadora
 void insertSortedArray(ArrayList *list, void *data, int (*cmp)(const void *, const void *));
 
+// Retorna el número de elementos del ArrayList
+int sizeArrayList(ArrayList *list);
+
+// Retorna el elemento en la posición index (0-based)
+void *getArrayList(ArrayList *list, int index);
+
 #endif /* ARRAY_LIST_H */

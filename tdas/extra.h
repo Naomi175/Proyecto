@@ -54,4 +54,25 @@ void seleccionarProductosParaCarro(Producto **productos, int cantidad, List *car
 // Extrae hasta max 10 productos de una List* en un arreglo Producto*[]
 int obtenerProductosDeLista(List *lista, Producto **productos, int max);
 
+// Valida si no contiene caracteres no permitidos
+int validarNombre(const char *nombre);
+
+// Valida si se ingresan numeros
+int validarTelefono(const char *telefono);
+
+// valida cuando no se escriba
+int validarTextoNoVacio(const char *texto);
+
+// Muestra el menú del carrito de compras con opciones disponibles
+void mostrarMenuCarrito();
+
+// Muestra todos los productos actualmente en el carrito
+void mostrarCarro(List *listaCarro);
+
+// Permite al usuario eliminar un producto específico del carrito
+void eliminarDelCarro(List *listaCarro);
+
+// Crea un nuevo pedido con los productos del carrito y lo añade a la cola de pedidos
+void encargarProductos(List *listaCarro, Queue *colaPedidos);
+
 #endif

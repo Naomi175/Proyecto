@@ -159,3 +159,21 @@ void destroyList(List * list, void (*freeData)(void *)) {
     cleanList(list, freeData);
     free(list);
 }
+
+void setCurrent(List *list, void *dato) {
+    if (!list) return;
+    Node *temp = list->head;
+    while (temp != NULL) {
+        if (temp->data == dato) {
+            list->current = temp;
+            return;
+        }
+        temp = temp->next;
+    }
+    list->current = NULL;
+}
+
+void *getCurrent(List *list) {
+    if (!list || !list->current) return NULL;
+    return list->current->data;
+}

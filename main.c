@@ -719,7 +719,8 @@ void mostrarPedidosPendientes(Queue *colaPedidos) {
 
     while (!isEmpty(colaPedidos)) {
         Pedido *pedido = (Pedido *)dequeue(colaPedidos);
-        printf("\nPedido #%d\n", contador++);
+        puts("----------------------------------------------");
+        printf("Pedido #%d\n", contador++);
         printf("Nombre cliente: %s\n", pedido->nombreCliente);
         printf("Telefono: %s\n", pedido->telefono);
         printf("Direccion: %s\n", pedido->direccion);
@@ -728,13 +729,14 @@ void mostrarPedidosPendientes(Queue *colaPedidos) {
         void *prod = firstList(pedido->productos);
         while (prod) {
             Producto *producto = (Producto *)prod;
-            printf("- %s (ID: %d | Precio: $%d | Cantidad: %d)\n",
+            printf("- %s (ID: %d | Precio: $%d | Stock: %d)\n",
                    producto->nombre, producto->id, producto->precio, producto->stock);
             prod = nextList(pedido->productos);
         }
 
         enqueue(colaAux, pedido);
     }
+    puts("----------------------------------------------");
 
     // Restaurar cola original
     while (!isEmpty(colaAux)) {
@@ -759,6 +761,7 @@ void procesarPedidos(Queue *colaPedidos) {
     Queue *colaTemporal = createQueue(0);
 
     while (!isEmpty(colaPedidos)) {
+        limpiarPantalla();
         Pedido *pedido = dequeue(colaPedidos);
 
         // Mostrar información del pedido
@@ -772,15 +775,16 @@ void procesarPedidos(Queue *colaPedidos) {
         void *prod = firstList(pedido->productos);
         while (prod) {
             Producto *producto = (Producto *)prod;
-            printf("- %s (ID: %d | Precio: $%d | Cantidad: %d)\n",
+            printf("- %s (ID: %d | Precio: $%d | Stock: %d)\n",
                    producto->nombre, producto->id, producto->precio, producto->stock);
             prod = nextList(pedido->productos);
         }
 
         puts("----------------------------");
         puts("Desea procesar este pedido?");
-        puts("1) Si, procesar y eliminar pedido");
-        puts("2) No, cancelar proceso y salir");
+        puts("1) Procesar y eliminar pedido");
+        puts("2) Saltar y ver siguiente pedido");
+        puts("3) Cancelar proceso y salir");
         printf("Ingrese una opcion: ");
 
         char opcion;
@@ -795,15 +799,18 @@ void procesarPedidos(Queue *colaPedidos) {
             limpiarPantalla();
         } 
         else if (opcion == '2') {
+            enqueue(colaTemporal, pedido); // Volver a encolar al final
+            puts("Pedido saltado. Pasando al siguiente...");
+            presioneTeclaParaContinuar();
+        }
+        else if (opcion == '3') {
             enqueue(colaTemporal, pedido); // Reencolar y salir
             puts("Proceso de pedidos cancelado.");
             break;
-        } 
-        else {
+        } else {
             puts("Opcion invalida. Reenviando el pedido al final de la cola.");
             enqueue(colaTemporal, pedido);
             presioneTeclaParaContinuar();
-            limpiarPantalla();
         }
     }
 
@@ -814,10 +821,14 @@ void procesarPedidos(Queue *colaPedidos) {
 
     freeQueue(colaTemporal);
 
-    if (isEmpty(colaPedidos)) {
-        puts("Todos los pedidos han sido procesados.");
-    }
+    limpiarPantalla();
 
+    if (isEmpty(colaPedidos)) {
+        puts("Todos los pedidos han sido procesados :)");
+    }
+    else {
+        puts("Fin de proceso de pedidos.");
+    }
     presioneTeclaParaContinuar();
 }
 
@@ -853,6 +864,33 @@ void gestionarPedidos(Queue *colaPedidos){
     }
     presioneTeclaParaContinuar();
 }
+
+// Menú principal del carrito: permite mostrar, editar o encargar productos. Utiliza funciones en extra.h
+void verCarrito(List *listaCarro, ArrayList *listaProductos, Queue *colaPedidos) {
+    char op[10];
+
+    while (1) {
+        limpiarPantalla();
+        mostrarMenuCarrito();
+        scanf("%s", op);
+
+        if (strcmp(op, "1") == 0) {
+            mostrarCarro(listaCarro);
+            presioneTeclaParaContinuar();
+        } else if (strcmp(op, "2") == 0) {
+            eliminarDelCarro(listaCarro);
+        } else if (strcmp(op, "3") == 0) {
+            encargarProductos(listaCarro, colaPedidos);
+        } else if (strcmp(op, "4") == 0) {
+            limpiarPantalla();
+            printf("Volviendo al menu principal...\n");
+            break;
+        } else {
+            printf("Opcion invalida, intentelo de nuevo.\n");
+        }
+    }
+}
+
 
 // Cambia la clave del administrador, asegurando que tenga 4 dígitos y sea confirmada.
 void cambiarClave(char *claveAdmin) {
@@ -934,7 +972,7 @@ void ejecutarAplicacion() {
         else if (strcmp(op, "2") == 0) verCatalogo(listaProductos, listaCarro); //2. Ver catálogo completo.
         else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres, listaCarro); //3. Buscar producto por nombre.
         else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias, listaCarro);//4. Ver productos por categoría.
-        //else if (strcmp(op, "5") == 0) verCarrito(listaCarro, colaPedidos);//5. Ver carrito de compras y encargar.
+        else if (strcmp(op, "5") == 0) verCarrito(listaCarro, listaProductos, colaPedidos);//5. Ver carrito de compras y encargar.
         else if (strcmp(op, "6") == 0){ //6. Ingresar al modo administrador.
             limpiarPantalla();
             int claveCorrecta = 0;

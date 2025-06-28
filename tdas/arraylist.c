@@ -155,3 +155,13 @@ void insertSortedArray(ArrayList *list, void *data, int (*cmp)(const void *, con
     list->size++;
     list->current = i;
 }
+
+int sizeArrayList(ArrayList *list) {
+    if (!list) return 0;
+    return list->size;
+}
+
+void *getArrayList(ArrayList *list, int index) {
+    if (!list || index < 0 || index >= list->size) return NULL;
+    return list->items[index];
+}

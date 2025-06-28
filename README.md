@@ -35,12 +35,12 @@ Para comenzar a trabajar con la aplicación debes tener en cuenta lo siguiente:
     - Abre la terminal, en este caso la terminal de bash ('Terminal > Git Bash').
     - En la terminal bash, compila el programa con el siguiente comando (puedes copiarlo y pegarlo en la terminal):
 
->gcc main.c tdas/map.c tdas/linkedlist.c tdas/arraylist.c tdas/queue.c tdas/extra.c -I. -o test
+>gcc main.c tdas/map.c tdas/linkedlist.c tdas/arraylist.c tdas/queue.c tdas/extra.c -I. -o programa
 
 4. Ejecutar el programa:
     - Si ya tienes compilado tu programa, ahora puedes ejecutarlo con esto (también se puede copiar y pegar en la terminal):
 
->./test
+>./programa
 
 - Debería salirte una ventana emergente donde se puede ejecutar correctamente la aplicación. En caso de tener antivirus puede cerrarse esta ventana emergente, pero no hay problema, la ejecución se puede realizar en la misma terminal.
 
@@ -82,7 +82,7 @@ Y seguido a este, deben ir línea por línea los datos de cada producto. Por eje
 
 4. **Ver productos por categoria:** Se ingresa el nombre de la categoria a buscar y si es que existe, muestra todos los productos de esa categoria con sus respectivos datos.
 
-5. **Ver carrito de compras y encagar:** El usuario puede ver los productos que han sido agregados en el carrito, permitiendo opciones como editar el carrito (añadir o eliminar el producto) y realizar el encargo. Al momento de realizar el encargo del pedido, se deben ingresar datos personales.
+5. **Ver carrito de compras y encagar:** El usuario puede ver los productos que han sido agregados en el carrito, permitiendo opciones como editar el carrito (eliminar algun producto) y realizar el encargo. Al momento de realizar el encargo del pedido, se deben ingresar datos personales.
 
 6. **Ingresar al modo administrador:** Se solicita una clave de acceso, pero si es la primera vez que se ingresa, la clave de acceso por defecto es "0000". Esto permite ingresar al submenú del modo administrador.
 

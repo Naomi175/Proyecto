@@ -46,4 +46,10 @@ void cleanList(List *list, void (*freeData)(void *));
 // Libera completamente la lista y todos sus elementos (usando free si se usa dinamicamente o NULL)
 void destroyList(List *list, void (*freeData)(void *));
 
+// Establece el nodo actual (current) en la lista que contiene el dato dado.
+void setCurrent(List *list, void *dato);
+
+// Obtiene el dato almacenado en el nodo actual (current) de la lista.
+void *getCurrent(List *list);
+
 #endif /* LIST_H */
