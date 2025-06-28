@@ -7,9 +7,9 @@ Esta aplicación permite a los usuarios la gestión de compras al interior de un
 
 **La aplicación opera con dos modalidades principales:**
 
-- Modo de cliente: Permite funcionalidades como ver los productos más recientes o novedosos, consultar el catálogo de productos, buscar productos ya sea por nombre o por categoría, gestionar un carrito de compras y realizar encargos de pedidos.
+- **Modo de cliente**: Permite funcionalidades como ver los productos más recientes o novedosos, consultar el catálogo de productos, buscar productos ya sea por nombre o por categoría, gestionar un carrito de compras y realizar encargos de pedidos.
 
-- Modo de administrador: Ofrece funcionalidades de gestión de inventario para el administrador de la tienda. Permitiendo agregar, modificar y eliminar productos, consultar productos que posean bajo stock y procesar los pedidos de los clientes.
+- **Modo de administrador**: Ofrece funcionalidades de gestión de inventario para el administrador de la tienda. Permitiendo agregar, modificar y eliminar productos, consultar productos que posean bajo stock y procesar los pedidos de los clientes.
 
 
 ## ¿CÓMO COMPILAR Y EJECUTAR?
@@ -18,9 +18,9 @@ Este sistema se desarrolló en lenguaje C y puede ejecutarse utilizando Visual S
 Para comenzar a trabajar con la aplicación debes tener en cuenta lo siguiente:
 
 ### REQUISITOS PREVIOS:
-- Tener instalado [Visual Studio Code] (https://code.visualstudio.com/).
+- Tener instalado [Visual Studio Code](https://code.visualstudio.com/).
 - Instalar la extensión C/C++ de Microsoft.
-- Tener instalado un compilador de C (como gcc). Si estás en Windows, se recomienda instalar [MinGW](https://www.mingw-w64.org/) o utilizar el entorno [WSL] (https://learn.microsoft.com/en-us/windows/wsl/).
+- Tener instalado un compilador de C (como gcc). Si estás en Windows, se recomienda instalar [MinGW](https://www.mingw-w64.org/) o utilizar el entorno [WSL](https://learn.microsoft.com/en-us/windows/wsl/).
 
 
 ### PASOS PARA COMPILAR Y EJECUTAR:
@@ -54,50 +54,54 @@ La primera línea debe estar compuesta por el siguiente texto:
 Y seguido a este, deben ir línea por línea los datos de cada producto. Por ejemplo:
 
 >01;Tomates;Verduras;300;80
+
 >02;Audífonos;Electrónicos;5000;10
+
 >03;Leche;Lácteos;1000;50
+
 >04;Cloro;Limpieza;2500;20
+
 >05;Tijeras escolares;Papelería;1500;15
 
 **Considera que los datos que deben estar en cada producto son:**
 
-- ID : dato de tipo entero, es como un código para identificar el producto por parte de la administración.
-- Nombre : Caracteres con el nombre del producto.
-- Categoría : Caracteres con la categoría a la que corresponde el producto.
-- Precio : Dato de tipo entero, con el precio del producto individual.
-- Stock : Dato de tipo entero, con la cantidad total de unidades del producto.
+- **ID :** dato de tipo entero, es como un código para identificar el producto por parte de la administración.
+- **Nombre :** Caracteres con el nombre del producto.
+- **Categoría :** Caracteres con la categoría a la que corresponde el producto.
+- **Precio :** Dato de tipo entero, con el precio del producto individual.
+- **Stock :** Dato de tipo entero, con la cantidad total de unidades del producto.
 
 
 ## FUNCIONALIDADES:
 **Menú principal (Modo Cliente):**
-1. Revisar novedades: Muestra los últimos 10 productos agregados al catálogo. Permite al usuario ver los detalles de cada producto y seleccionar alguno para agregarlo al carrito de compras.
+1. **Revisar novedades:** Muestra los últimos 10 productos agregados al catálogo. Permite al usuario ver los detalles de cada producto y seleccionar alguno para agregarlo al carrito de compras.
 
-2. Ver catalogo completo: Permite visualizar todos los productos disponibles en el inventario, ordenandolos alfabeticamente por nombre.
+2. **Ver catalogo completo:** Permite visualizar todos los productos disponibles en el inventario, ordenandolos alfabeticamente por nombre.
 
-3. Buscar productos por nombre: Se ingresa el nombre del producto y en caso de que exista, se muestran sus datos.
+3. **Buscar productos por nombre:** Se ingresa el nombre del producto y en caso de que exista, se muestran sus datos.
 
-4. Ver productos por categoria: Se ingresa el nombre de la categoria a buscar y si es que existe, muestra todos los productos de esa categoria con sus respectivos datos.
+4. **Ver productos por categoria:** Se ingresa el nombre de la categoria a buscar y si es que existe, muestra todos los productos de esa categoria con sus respectivos datos.
 
-5. Ver carrito de compras y encagar: El usuario puede ver los productos que han sido agregados en el carrito, permitiendo opciones como editar el carrito (añadir o eliminar el producto) y realizar el encargo. Al momento de realizar el encargo del pedido, se deben ingresar datos personales.
+5. **Ver carrito de compras y encagar:** El usuario puede ver los productos que han sido agregados en el carrito, permitiendo opciones como editar el carrito (añadir o eliminar el producto) y realizar el encargo. Al momento de realizar el encargo del pedido, se deben ingresar datos personales.
 
-6. Ingresar al modo administrador: Se solicita una clave de acceso, pero si es la primera vez que se ingresa, la clave de acceso por defecto es "0000". Esto permite ingresar al submenú del modo administrador.
+6. **Ingresar al modo administrador:** Se solicita una clave de acceso, pero si es la primera vez que se ingresa, la clave de acceso por defecto es "0000". Esto permite ingresar al submenú del modo administrador.
 
 **Modo administrador:**
-1. Agregar producto: Permite agregar productos, para esto existen dos alternativas:
+1. **Agregar producto:** Permite agregar productos, para esto existen dos alternativas:
     1) Cargar archivo CSV: Se introduce la ruta de acceso al csv y esto hace que todos los productos de este archivo ingresen al programa.
     2) Ingresar producto manualmente: Se puede introducir un producto a la vez, se solicitan uno a uno los datos de este producto y se ingresan al programa.
 
-2. Modificar producto: Permite editar los datos de un producto existente, para esto se ingresa el ID del producto y se pregunta que se desea modificar, luego de seleccionar una opción, se escriben los cambios y se realiza la modificación especifica.
+2. **Modificar producto:** Permite editar los datos de un producto existente, para esto se ingresa el ID del producto y se pregunta que se desea modificar, luego de seleccionar una opción, se escriben los cambios y se realiza la modificación especifica.
 
-3. Eliminar producto: Permite eliminar un producto existente, para esto se ingresa el ID de este producto para proceder con su eliminación.
+3. **Eliminar producto:** Permite eliminar un producto existente, para esto se ingresa el ID de este producto para proceder con su eliminación.
 
-4. Consultar stock bajo: Para que el administrador sepa que se debe reponer. Se muestra un listado con los datos de productos que tengan un stock de 10 a menos.
+4. **Consultar stock bajo:** Para que el administrador sepa que se debe reponer. Se muestra un listado con los datos de productos que tengan un stock de 10 a menos.
 
-5. Gestionar pedidos de clientes: Permite al administrador ver y procesar los pedidos realizados por clientes. Para esto se muestran dos opciones:
+5. **Gestionar pedidos de clientes:** Permite al administrador ver y procesar los pedidos realizados por clientes. Para esto se muestran dos opciones:
     1) Ver pedidos pendientes: Se mostrarán todos los pedidos actuales sin procesar y con la infromación de cada uno.
     2) Procesar pedido: Se pregunta si se desea procesar el pedido más antiguo, en caso de confirmar esto, este pedido se procesará automaticamente.
 
-6. Cambiar clave de administrador: Permite modificar la clave de ingreso al modo administrador, solicitando nuevamente la clave actual y también solicitando la clave por la que se desea cambiar. Este cambio ocurrirá solo si las claves son distintas, ya que si son iguales, la modificación sería innecesaria.
+6. **Cambiar clave de administrador:** Permite modificar la clave de ingreso al modo administrador, solicitando nuevamente la clave actual y también solicitando la clave por la que se desea cambiar. Este cambio ocurrirá solo si las claves son distintas, ya que si son iguales, la modificación sería innecesaria.
 
 
 ## ASPECTOS A CONSIDERAR:
@@ -107,4 +111,57 @@ Como ya se mencionó antes, al momento de ejecutar pueden haber casos donde el a
 
 ## EJEMPLO DE USO:
 
+**MENÚ PRINCIPAL:**
+---------------------------------------------
+MENU PRINCIPAL - SELECCIONE UNA OPCION:
+---------------------------------------------
+1. Revisar novedades.
+2. Ver catalogo completo.
+3. Buscar producto por nombre.
+4. Ver productos por categoria.
+5. Ver carrito de compras y encargar.
+6. Ingresar al modo administrador.
+7. Salir del programa.
+Ingrese su opcion:
 
+**1 (Revisar novedades)** 
+
+**2 (Ver catalogo completo)**
+
+**3 (Buscar producto por nombre)**
+
+**4 (Ver productos por categoria)**
+
+**5 (Ver carrito de compras y encargar)**
+
+**6 (Ingresar al modo administrador)**
+Ingrese la clave de administrador (4 digitos) o ingrese 0 para regresar: 
+
+**SUBMENU DEL MODO ADMINISTRADOR:**
+---------------------------------------------
+MODO ADMINISTRADOR - SELECCIONE UNA OPCION:
+---------------------------------------------
+1. Agregar producto.
+2. Modificar producto.
+3. Eliminar producto.
+4. Consultar stock bajo.
+5. Gestionar pedidos de clientes.
+6. Cambiar clave de administrador.
+7. Salir del modo administrador.
+Ingrese su opcion:
+
+**1 (Agregar producto)** 
+Seleccione un modo de ingreso:
+1) Cargar archivo CSV
+2) Ingresar producto manualmente
+3) Regresar al menu de administrador
+
+**2 (Modificar producto)**
+
+**3 (Eliminar producto)**
+
+**4 (Consultar stock bajo)**
+
+**5 (Gestionar pedidos de clientes)**
+
+**6 (Cambiar clave de administrador)**
