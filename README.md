@@ -35,12 +35,12 @@ PASOS PARA COMPILAR Y EJECUTAR:
     - Abre la terminal, en este caso la terminal de bash ('Terminal > Git Bash').
     - En la terminal bash, compila el programa con el siguiente comando (puedes copiarlo y pegarlo en la terminal):
 
-gcc main.c tdas/map.c tdas/linkedlist.c tdas/arraylist.c tdas/queue.c tdas/extra.c -I. -o test
+gcc main.c tdas/map.c tdas/linkedlist.c tdas/arraylist.c tdas/queue.c tdas/extra.c -I. -o programa
 
 4. Ejecutar el programa:
     - Si ya tienes compilado tu programa, ahora puedes ejecutarlo con esto (también se puede copiar y pegar en la terminal):
 
-./test
+./programa
 
 - Debería salirte una ventana emergente donde se puede ejecutar correctamente la aplicación. En caso de tener antivirus puede cerrarse esta ventana emergente, pero no hay problema, la ejecución se puede realizar en la misma terminal.
 

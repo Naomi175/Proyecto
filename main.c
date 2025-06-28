@@ -434,32 +434,46 @@ void revisarNovedades(Queue *colaNovedades, List *carro) {
     presioneTeclaParaContinuar();
 }
 
-// void buscarPorNombre(Map *mapaPorNombres) {                           // Algo tiene malo esta funcion, se bugea al momento de escribir el nombre
-//     limpiarPantalla();
-//     char nombre[MAX_NOMBRE];
-//     printf("Ingrese el nombre del producto a buscar: ");
-//     fgets(nombre, sizeof(nombre), stdin);
-//     MapPair *par = map_search(mapaPorNombres, nombre);
-//     if (!par) {
-//         puts("No se encontraron productos con ese nombre.");
-//         presioneTeclaParaContinuar();
-//         return;
-//     }
+void buscarPorNombre(Map *mapaPorNombres, List *listaCarro) {
+    limpiarPantalla();
 
-//     List *listaProductos = (List *)par->value;
-//     void *producto = firstList(listaProductos);
-//     if (!producto) {
-//         puts("No hay productos con ese nombre.");
-//         presioneTeclaParaContinuar();
-//         return;
-//     }
+    char nombre[MAX_NOMBRE];
+    printf("Ingrese el nombre del producto a buscar: ");
+    
+    limpiarBuffer();
 
-//     while (producto) {
-//         mostrarProducto((Producto *)producto);
-//         producto = nextList(listaProductos);
-//     }
-//     presioneTeclaParaContinuar();
-// }
+    // Leer el nombre y quitar el salto de línea
+    fgets(nombre, sizeof(nombre), stdin);
+    nombre[strcspn(nombre, "\n")] = '\0';
+
+    MapPair *par = map_search(mapaPorNombres, nombre);
+    if (!par) {
+        puts("No se encontraron productos con ese nombre.");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    Producto *producto = (Producto *)par->value;
+    mostrarProducto(producto);
+
+    // Preguntar si desea agregar al carro
+    puts("----------------------------------------");
+    puts("Desea agregar este producto al carrito?");
+    puts("1) Si");
+    puts("2) No");
+    char opcion;
+    scanf(" %c", &opcion);
+    limpiarBuffer();
+
+    if (opcion == '1') {
+        limpiarPantalla();
+        agregarAlCarro(listaCarro, producto);
+    } else {
+        limpiarPantalla();
+        puts("Producto no agregado.");
+    }
+    presioneTeclaParaContinuar();
+}
 
 void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     limpiarPantalla();
@@ -545,11 +559,6 @@ void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
-<<<<<<< HEAD
-
-
-void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades) {
-=======
 void verPorCategoria(Map *mapaPorCategorias, List *listaCarro) {
     limpiarPantalla();
 
@@ -654,7 +663,6 @@ void verPorCategoria(Map *mapaPorCategorias, List *listaCarro) {
 }
 
 void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades, char *claveAdmin) {
->>>>>>> 862223822fa98c70661f8e893eec0780346c8d99
     while (1) {
         limpiarPantalla();
         mostrarMenuAdmin();
@@ -695,15 +703,9 @@ void ejecutarAplicacion() {
 
         if (strcmp(op,"1") == 0) revisarNovedades(colaNovedades, listaCarro); //1. Revisar novedades.
         else if (strcmp(op, "2") == 0) verCatalogo(listaProductos, listaCarro); //2. Ver catálogo completo.
-<<<<<<< HEAD
-        else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
-        //else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
-        //else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
-=======
-        //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres, listaCarro); //3. Buscar producto por nombre.
+        else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres, listaCarro); //3. Buscar producto por nombre.
         else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias, listaCarro);//4. Ver productos por categoría.
         //else if (strcmp(op, "5") == 0) verCarrito(listaCarro, colaPedidos);//5. Ver carrito de compras y encargar.
->>>>>>> 862223822fa98c70661f8e893eec0780346c8d99
         else if (strcmp(op, "6") == 0){ //6. Ingresar al modo administrador.
             limpiarPantalla();
             int claveCorrecta = 0;
@@ -731,7 +733,7 @@ void ejecutarAplicacion() {
                     puts("Clave incorrecta, intente nuevamente.");
                 }
             }
-            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades);//6. Ingresar al modo administrador.
+            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades, claveAdmin);//6. Ingresar al modo administrador.
         }
         else if (strcmp(op, "7") == 0) {  //7. Salir del programa.
             limpiarPantalla();
