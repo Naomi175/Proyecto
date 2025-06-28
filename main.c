@@ -683,6 +683,154 @@ void verPorCategoria(Map *mapaPorCategorias, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
+void mostrarPedidosPendientes(Queue *colaPedidos) {
+    limpiarPantalla();
+
+    if (isEmpty(colaPedidos)) {
+        puts("No hay pedidos pendientes.");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    puts("Pedidos pendientes:");
+
+    Queue *colaAux = createQueue(colaPedidos->maxSize);
+    int contador = 1;
+
+    while (!isEmpty(colaPedidos)) {
+        Pedido *pedido = (Pedido *)dequeue(colaPedidos);
+        printf("\nPedido #%d\n", contador++);
+        printf("Nombre cliente: %s\n", pedido->nombreCliente);
+        printf("Telefono: %s\n", pedido->telefono);
+        printf("Direccion: %s\n", pedido->direccion);
+        puts("Productos encargados:");
+
+        void *prod = firstList(pedido->productos);
+        while (prod) {
+            Producto *producto = (Producto *)prod;
+            printf("- %s (ID: %d | Precio: $%d | Cantidad: %d)\n",
+                   producto->nombre, producto->id, producto->precio, producto->stock);
+            prod = nextList(pedido->productos);
+        }
+
+        enqueue(colaAux, pedido);
+    }
+
+    // Restaurar cola original
+    while (!isEmpty(colaAux)) {
+        enqueue(colaPedidos, dequeue(colaAux));
+    }
+
+    free(colaAux);
+    presioneTeclaParaContinuar();
+}
+
+void procesarPedidos(Queue *colaPedidos) {
+    limpiarPantalla();
+
+    if (isEmpty(colaPedidos)) {
+        puts("No hay pedidos para procesar.");
+        presioneTeclaParaContinuar();
+        return;
+    }
+
+    Queue *colaTemporal = createQueue(0);
+
+    while (!isEmpty(colaPedidos)) {
+        Pedido *pedido = dequeue(colaPedidos);
+
+        // Mostrar información del pedido
+        puts("----- Pedido pendiente -----");
+        printf("ID Pedido: %d\n", pedido->idPedido);
+        printf("Cliente: %s\n", pedido->nombreCliente);
+        printf("Telefono: %s\n", pedido->telefono);
+        printf("Direccion: %s\n", pedido->direccion);
+
+        puts("Productos del pedido:");
+        void *prod = firstList(pedido->productos);
+        while (prod) {
+            Producto *producto = (Producto *)prod;
+            printf("- %s (ID: %d | Precio: $%d | Cantidad: %d)\n",
+                   producto->nombre, producto->id, producto->precio, producto->stock);
+            prod = nextList(pedido->productos);
+        }
+
+        puts("----------------------------");
+        puts("Desea procesar este pedido?");
+        puts("1) Si, procesar y eliminar pedido");
+        puts("2) No, cancelar proceso y salir");
+        printf("Ingrese una opcion: ");
+
+        char opcion;
+        scanf(" %c", &opcion);
+        limpiarBuffer();
+
+        if (opcion == '1') {
+            cleanList(pedido->productos, NULL);  // Solo limpiar lista
+            free(pedido);
+            puts("Pedido procesado exitosamente.");
+            presioneTeclaParaContinuar();
+            limpiarPantalla();
+        } 
+        else if (opcion == '2') {
+            enqueue(colaTemporal, pedido); // Reencolar y salir
+            puts("Proceso de pedidos cancelado.");
+            break;
+        } 
+        else {
+            puts("Opcion invalida. Reenviando el pedido al final de la cola.");
+            enqueue(colaTemporal, pedido);
+            presioneTeclaParaContinuar();
+            limpiarPantalla();
+        }
+    }
+
+    // Reinsertar los pedidos no procesados
+    while (!isEmpty(colaTemporal)) {
+        enqueue(colaPedidos, dequeue(colaTemporal));
+    }
+
+    freeQueue(colaTemporal);
+
+    if (isEmpty(colaPedidos)) {
+        puts("Todos los pedidos han sido procesados.");
+    }
+
+    presioneTeclaParaContinuar();
+}
+
+void gestionarPedidos(Queue *colaPedidos){
+    limpiarPantalla();
+    while(1){
+        puts("-----Opciones de gestion-----");
+        puts("1) Mostrar pedidos pendientes");
+        puts("2) iniciar proceso de pedidos");
+        puts("3) Regresar al menu");
+        printf("Ingrese una opcion: ");
+        char opcion;
+        scanf(" %c", &opcion);
+        limpiarBuffer();
+
+        if (opcion == '1'){
+            mostrarPedidosPendientes(colaPedidos);
+            limpiarPantalla();
+        }
+        else if (opcion == '2'){
+            procesarPedidos(colaPedidos);
+            limpiarPantalla();
+        }
+        else if (opcion == '3'){
+            limpiarPantalla();
+            puts("Regresando al menu.");
+            break;
+        } else {
+            limpiarPantalla();
+            puts("Error: Caracter invalido.");
+        }
+    }
+    presioneTeclaParaContinuar();
+}
+
 void cambiarClave(char *claveAdmin) {
     limpiarPantalla();
     
@@ -727,7 +875,7 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
         else if (strcmp(op, "2") == 0) modificarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos);//2. Modificar producto.
         else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //3. Eliminar producto.
         else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
-        //else if (strcmp(op, "5") == 0) gestionPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
+        else if (strcmp(op, "5") == 0) gestionarPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
         else if (strcmp(op, "6") == 0) cambiarClave(claveAdmin);//6. Cambiar clave de administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del modo administrador.
             printf("Volviendo al menu principal...\n");
