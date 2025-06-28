@@ -453,7 +453,9 @@ void verCatalogo(ArrayList *listaProductos) {
     presioneTeclaParaContinuar();
 }
 
-void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades) {
+
+
+void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades, short clave) {
     while (1) {
         limpiarPantalla();
         mostrarMenuAdmin();
@@ -505,7 +507,7 @@ void ejecutarAplicacion() {
                     printf("Clave incorrecta, intente nuevamente.\n");
                 }
             }
-            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades);//6. Ingresar al modo administrador.
+            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades, clave);//6. Ingresar al modo administrador.
         }
         else if (strcmp(op, "7") == 0) {  //7. Salir del programa.
             printf("Saliendo del programa...\n");
