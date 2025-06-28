@@ -1,0 +1,51 @@
+ID,Nombre,Categoría,Precio,Stock
+01,Tomates,Verduras,300,80
+02,Audífonos,Electrónicos,5000,10
+03,Leche,Lácteos,1000,50
+04,Cloro,Limpieza,2500,20
+05,Tijeras escolares,Papelería,1500,15
+06,Queso,Lácteos,3000,30
+07,Comida de perro,Mascotas,10000,15
+08,Pimentón ,Verduras,500,40
+09,Yogurt,Lácteos,450,60
+10,Block de dibujo,Papelería,2000,5
+11,Ludo,Juguetería,3000,4
+12,Confort,Limpieza,2000,50
+13,Jugo de naranja,Bebestibles,2000,40
+14,Set de bloques,Juguetería,15000,12
+15,Cuaderno universitario,Papelería,5000,15
+16,Lechuga,Verduras,1350,10
+17,Costillar,Carnes,24910,35
+18,Rascador pequeño,Mascotas,8360,57
+19,Salame,Fiambres,12330,74
+20,Jamon de pavo,Fiambres,13190,20
+21,Agua mineral,Bebestibles,11750,21
+22,Papas fritas,Snacks,3490,38
+23,Jabón en barra,Limpieza,2160,52
+24,Batería portátil,Electrónicos,20260,40
+25,Nuggets de pollo,Congelados,11020,31
+26,Arena sanitaria,Mascotas,22840,22
+27,Crema chantilly,Lácteos,6720,7
+28,Detergente líquido,Limpieza,15280,78
+29,Ramitas de queso,Snacks,8180,35
+30,Lomo vetado,Carnes,20160,42
+31,Quesillo,Lácteos,7380,5
+32,Pepino,Verduras,6810,8
+33,Snack para gato,Mascotas,8160,58
+34,Chuleta de cerdo,Carnes,23820,86
+35,Robot de juguete,Juguetería,13570,4
+36,Suflés,Snacks,6810,74
+37,Carne molida,Carnes,8870,52
+38,Comedero plástico,Mascotas,8200,29
+39,Mini pizzas,Congelados,8500,3
+40,Pechuga de pollo,Carnes,27430,20
+41,Té helado,Bebestibles,12540,80
+42,Peperoni,Fiambres,11150,68
+43,Mantequilla,Lácteos,1590,3
+44,Rollitos primavera,Congelados,11550,93
+45,Doritos,Snacks,4390,23
+46,Mortadela,Fiambres,9590,37
+47,Regla 30cm,Papelería,1130,20
+48,Bebida energética,Bebestibles,2200,35
+49,Filete de  vacuno,Carnes,2250,86
+50,Paté de ave,Fiambres,2100,37
