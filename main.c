@@ -461,6 +461,28 @@ void revisarNovedades(Queue *colaNovedades, List *carro) {
 //     presioneTeclaParaContinuar();
 // }
 
+
+void consultarStock(Map *mapaPorId) {
+    limpiarPantalla();
+    puts("Productos con stock bajo (menos de 5 unidades):");
+    int encontrado = 0;
+
+    MapPair *par = map_first(mapaPorId);
+    while (par) {
+        Producto *producto = (Producto *)par->value;
+        if (producto->stock < 5) {
+            mostrarProducto(producto);
+            encontrado = 1;
+        }
+        par = map_next(mapaPorId);
+    }
+
+    if (!encontrado) {
+        puts("No hay productos con stock bajo.");
+    }
+    presioneTeclaParaContinuar();
+}
+
 void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     limpiarPantalla();
 
@@ -545,116 +567,9 @@ void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
-<<<<<<< HEAD
 
 
 void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades) {
-=======
-void verPorCategoria(Map *mapaPorCategorias, List *listaCarro) {
-    limpiarPantalla();
-
-    char categoriaBuscada[MAX_CATEGORIA];
-    printf("Ingrese la categoria de productos que le interese: ");
-    scanf(" %[^\n]", categoriaBuscada); // Leer cadena con espacios
-    limpiarBuffer();
-
-    MapPair *par = map_search(mapaPorCategorias, categoriaBuscada);
-
-    if (!par || !par->value) {
-        puts("No se encontraron productos para esta categoria.");
-        presioneTeclaParaContinuar();
-        return;
-    }
-
-    List *lista = (List *)par->value;
-    const int porPagina = 10;
-    int pagina = 0;
-
-    while (1) {
-        limpiarPantalla();
-        
-        Producto *productos[porPagina];
-        int cantidadTotal = 0;
-
-        void *dato = firstList(lista);
-        while (dato) {
-            cantidadTotal++;
-            dato = nextList(lista);
-        }
-
-        if (cantidadTotal == 0) {
-            puts("No hay productos disponibles en esta categoria.");
-            presioneTeclaParaContinuar();
-            return;
-        }
-
-        // Avanzar a la pagina deseada
-        dato = firstList(lista);
-        int i = 0;
-        while (dato && i < pagina * porPagina) {
-            dato = nextList(lista);
-            i++;
-        }
-        printf("Productos encontrados de la categoria '%s':\n", categoriaBuscada);
-
-        // Mostrar hasta 10 productos de la pagina actual
-        int contador = 0;
-        while (dato && contador < porPagina) {
-            Producto *producto = (Producto *)dato;
-            mostrarProducto(producto);
-            productos[contador++] = producto;
-            dato = nextList(lista);
-        }
-
-        if (contador == 0) {
-            pagina--;
-            limpiarPantalla();
-            puts("Ya estas en la ultima pagina.");
-            presioneTeclaParaContinuar();
-            continue;
-        }
-
-        puts("----------------------------------------");
-        printf("                Pagina %d\n", pagina + 1);
-        puts("----------------------------------------");
-        puts("                OPCIONES");
-        puts("1) Agregar producto(s) al carro");
-        puts("2) Siguiente pagina");
-        puts("3) Pagina anterior");
-        puts("0) Volver al menu principal");
-        printf("Ingrese una opcion: ");
-
-        char opcion;
-        scanf(" %c", &opcion);
-        limpiarBuffer();
-
-        if (opcion == '1') {
-            limpiarPantalla();
-            seleccionarProductosParaCarro(productos, contador, listaCarro);
-            presioneTeclaParaContinuar();
-        } else if (opcion == '2') {
-            pagina++;
-        } else if (opcion == '3') {
-            if (pagina > 0) pagina--;
-            else {
-                limpiarPantalla();
-                puts("Ya estas en la primera pagina.");
-                presioneTeclaParaContinuar();
-            }
-        } else if (opcion == '0') {
-            limpiarPantalla();
-            puts("Volviendo al menu.");
-            break;
-        } else {
-            puts("Opcion invalida.");
-            presioneTeclaParaContinuar();
-        }
-    }
-    presioneTeclaParaContinuar();
-}
-
-void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades, char *claveAdmin) {
->>>>>>> 862223822fa98c70661f8e893eec0780346c8d99
     while (1) {
         limpiarPantalla();
         mostrarMenuAdmin();
@@ -665,7 +580,7 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
         if (strcmp(op,"1") == 0) agregarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //1. Agregar producto.
         else if (strcmp(op, "2") == 0) modificarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos);//2. Modificar producto.
         else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //3. Eliminar producto.
-        //else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
+        else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
         //else if (strcmp(op, "5") == 0) gestionPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
         //else if (strcmp(op, "6") == 0) cambiarClave(claveAdmin);//6. Cambiar clave de administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del modo administrador.
@@ -695,15 +610,9 @@ void ejecutarAplicacion() {
 
         if (strcmp(op,"1") == 0) revisarNovedades(colaNovedades, listaCarro); //1. Revisar novedades.
         else if (strcmp(op, "2") == 0) verCatalogo(listaProductos, listaCarro); //2. Ver catálogo completo.
-<<<<<<< HEAD
-        else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
+        //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
         //else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
         //else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
-=======
-        //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres, listaCarro); //3. Buscar producto por nombre.
-        else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias, listaCarro);//4. Ver productos por categoría.
-        //else if (strcmp(op, "5") == 0) verCarrito(listaCarro, colaPedidos);//5. Ver carrito de compras y encargar.
->>>>>>> 862223822fa98c70661f8e893eec0780346c8d99
         else if (strcmp(op, "6") == 0){ //6. Ingresar al modo administrador.
             limpiarPantalla();
             int claveCorrecta = 0;
