@@ -517,7 +517,7 @@ void verCatalogo(ArrayList *listaProductos, List *listaCarro) {
     presioneTeclaParaContinuar();
 }
 
-void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades) {
+void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, ArrayList *listaProductos, List *listaCarro, Queue *colaPedidos, Queue *colaNovedades, char *claveAdmin) {
     while (1) {
         limpiarPantalla();
         mostrarMenuAdmin();
@@ -530,7 +530,7 @@ void modoAdmin(Map *mapaPorId, Map *mapaPorCategorias, Map *mapaPorNombres, Arra
         else if (strcmp(op, "3") == 0) eliminarProducto(mapaPorId, mapaPorNombres, mapaPorCategorias, listaProductos, colaNovedades); //3. Eliminar producto.
         //else if (strcmp(op, "4") == 0) consultarStock(mapaPorId);//4. Consultar stock bajo.
         //else if (strcmp(op, "5") == 0) gestionPedidos(colaPedidos);//5. Gestionar pedidos de clientes.
-        //else if (strcmp(op, "6") == 0) cambiarClave();//6. Cambiar clave de administrador.
+        //else if (strcmp(op, "6") == 0) cambiarClave(claveAdmin);//6. Cambiar clave de administrador.
         else if (strcmp(op, "7") == 0) {  //7. Salir del modo administrador.
             printf("Volviendo al menu principal...\n");
             break;
@@ -547,6 +547,7 @@ void ejecutarAplicacion() {
     List *listaCarro = createList();
     Queue *colaNovedades = createQueue(MAX_NOVEDADES);
     Queue *colaPedidos = createQueue(0);
+    char claveAdmin[5] = "0000";
 
     while (1) {
         limpiarPantalla();
@@ -560,18 +561,38 @@ void ejecutarAplicacion() {
         //else if (strcmp(op, "3") == 0) buscarPorNombre(mapaPorNombres); //3. Buscar producto por nombre.
         //else if (strcmp(op, "4") == 0) verPorCategoria(mapaPorCategorias);//4. Ver productos por categoría.
         //else if (strcmp(op, "5") == 0) verCarrito(listaCarro);//5. Ver carrito de compras y encargar.
-        else if (strcmp(op, "6") == 0){
-            short clave = 0000;
-            short claveIngresada;
-            scanf("%hd", &claveIngresada);
-            while(claveIngresada != clave) {
-                printf("Ingrese la clave de administrador: ");
-                scanf("%hd", &claveIngresada);
-                if (claveIngresada != clave) {
-                    printf("Clave incorrecta, intente nuevamente.\n");
+        else if (strcmp(op, "6") == 0){ //6. Ingresar al modo administrador.
+            limpiarPantalla();
+
+            int claveCorrecta = 0;
+            char claveIngresada[10];
+            while (1) {
+                printf("Ingrese la clave de administrador (4 digitos) o ingrese 0 para regresar: ");
+                scanf("%9s", claveIngresada);
+
+                if (strcmp(claveIngresada, "0") == 0) {
+                    limpiarPantalla();
+                    puts("Ingreso de clave cancelado. Volviendo al menu principal.");
+                    break; // Sale del while y no entra a modo admin
+                }
+                if (strlen(claveIngresada) != 4) {
+                    limpiarPantalla();
+                    puts("La clave debe tener exactamente 4 digitos.");
+                    continue;
+                }
+
+                if (strcmp(claveIngresada, claveAdmin) == 0) {
+                    claveCorrecta = 1;
+                    break;
+                } else {
+                    limpiarPantalla();
+                    puts("Clave incorrecta, intente nuevamente.");
                 }
             }
-            modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades);//6. Ingresar al modo administrador.
+
+            if (claveCorrecta){
+                modoAdmin(mapaPorId, mapaPorCategorias, mapaPorNombres, listaProductos, listaCarro, colaPedidos, colaNovedades, claveAdmin);
+            }
         }
         else if (strcmp(op, "7") == 0) {  //7. Salir del programa.
             limpiarPantalla();
